@@ -50,5 +50,41 @@
 3. exitUntilCollapsed 值设为exitUntilCollapsed的View，当这个View要往上逐渐“消逝”时，会一直往上滑动，直到剩下的的高度达到它的最小高度后，再响应ScrollView的内部滑动事件。
 4. enterAlwaysCollapsed  是enterAlways的附加选项，一般跟enterAlways一起使用，它是指，View在往下“出现”的时候，首先是enterAlways效果，当View的高度达到最小高度时，View就暂时不去往下滚动，直到ScrollView滑动到顶部不再滑动时，View再继续往下滑动，直到滑到View的顶部结束。
 
+当需要在AppBarLayout中引入图片时，`ToolBar`需要使用`CollapsingToolbarLayout`标签包裹起来。
+```
+<android.support.design.widget.CollapsingToolbarLayout
+    android:id="@+id/toolbar_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    app:contentScrim="?attr/colorPrimary"
+    app:expandedTitleMarginEnd="64dp"
+    app:expandedTitleMarginStart="48dp"
+    app:layout_scrollFlags="scroll|exitUntilCollapsed">
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_collapseMode="parallax"
+        app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
+        android:adjustViewBounds="true"/>
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_collapseMode="pin" />
+</android.support.design.widget.CollapsingToolbarLayout>
+```
+向上滚动时`ImageView`高度减小，当`AppBarLayout`高度为最小时，`ImageView`隐藏，`AppBarLayout`展示的是`Toolbar`内容。所以`ImageView`标签必须在前，`Toolbar`在后。
+
+`app:layout_collapseMode="parallax"`属性是使`ImageView`在滚动时有视差的效果，视差的不同效果可以用`app:layout_collapseParallaxMultiplier="0.5"`来设置参数范围`0.0`到`1.0`，默认`0.5`。
+
+当使用`CollapsingToolbarLayout`标签时，`Toolbar.setTitle()`不再有效，标题必须设置在`CollapsingToolbarLayout` View上。
+```
+CollapsingToolbarLayout collapsingToolbar =
+                (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+        collapsingToolbar.setTitle("title");
+```
+
 
 `AppBarLayout`子View不同时实现不同的动作可见[AndroidStudioProjects/Animation](https://github.com/maohhgg/AndroidStudioProjects/tree/master/Animation)中[MainActivity](https://github.com/maohhgg/AndroidStudioProjects/blob/master/Animation/app/src/main/java/com/example/mao/animation/MainActivity.java)和[DetailActiviy](https://github.com/maohhgg/AndroidStudioProjects/blob/master/Animation/app/src/main/java/com/example/mao/animation/DetailActivity.java)不同的滚动效果。

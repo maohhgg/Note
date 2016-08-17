@@ -3,8 +3,11 @@ Activity Transition是Material Design中提供的一种动画效果。它通过�
 
 **主要步骤**
 1. 在Style主题中启用Activity Transition。
+
 2. 定义Transition特效样式
+
 3. 在Activity中代码实现上面两步（手动实现配置文件的效果）
+
 4. 启动Activity
 
 
