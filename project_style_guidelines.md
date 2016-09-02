@@ -107,7 +107,7 @@ Drawable资源文件通常使用**ic_**作为前缀连接资源的大小和颜�
 
 
 ## 2. 代码规范
-### 2.1 Java代码规范
+### 2.1 Java语言规范
 
 #### 2.1.1  绝对不忽略异常
 
@@ -132,3 +132,185 @@ public void setCount(String count) {
 	}
 }
 ```
+适当处理如下的错误：
+
+* 显示一个消息给用户提示他们出现了一个错误。
+* 设置时有默认的选项
+* 抛出一个合适的异常
+
+
+
+#### 2.1.2 Never catch generic exceptions
+
+捕捉异常时不应该有下面的情况：
+
+```java
+public void openCustomTab(Context context, Uri uri) {
+	Intent intent = buildIntent(context, uri);
+	try {
+    	context.startActivity(intent);
+	} catch (Exception e) {
+    	Log.e(TAG, "There was an error opening the custom tab " + e);
+	}
+}
+```
+
+为什么?
+
+*通常不要这样做，捕捉或者抛出（最好不要抛出，因为它有可能包是错误）普通异常是不恰当的，这样是非常危险的，你有可能捕捉到系统级别的错误（像RuntimeExceptions和ClassCastException），而你的代码就覆盖了他们的提示。意味着有时有新类型的异常发生在这段代码，编译器不会提示你去处理新类型的异常，多数情况下不应该用同样的方式处理不同的异常。* - 遵从Android代码规范
+
+#### 2.1.3 异常分组
+
+在相同位置有不同的异常发生，为了增加代码可读性和避免重复代码，你应该如下这样做：
+
+```java
+public void openCustomTab(Context context, @Nullable Uri uri) {
+	Intent intent = buildIntent(context, uri);
+	try {
+    	context.startActivity(intent);
+	} catch (ActivityNotFoundException e) {
+    	Log.e(TAG, "There was an error opening the custom tab " + e);
+	} catch (NullPointerException e) {
+    	Log.e(TAG, "There was an error opening the custom tab " + e);
+	} catch (SomeOtherException e) {
+		// Show some dialog
+    }
+}
+```
+
+也可以这样做:
+```java
+public void openCustomTab(Context context, @Nullable Uri uri) {
+	Intent intent = buildIntent(context, uri);
+	try {
+    	context.startActivity(intent);
+	} catch (ActivityNotFoundException e | NullPointerException e) {
+    	Log.e(TAG, "There was an error opening the custom tab " + e);
+	} catch (SomeOtherException e) {
+		// Show some dialog
+    }
+}
+```
+#### 2.1.4 使用try-catch来抛出异常
+
+使用try-catch语句改善发生异常代码的可读性。当异常出现是，更容易调试和处理错误。
+
+
+
+#### 2.1.6 禁止全部导入
+
+当导入库时，不应该导入全部包，比如：
+
+```java
+import android.support.v7.widget.*;
+```
+
+相反，应该这样：
+
+```java
+import android.support.v7.widget.RecyclerView;
+```
+
+#### 2.1.7 不要保留没使用的库
+
+有时删除一些代码而有的库不再使用，那么应该删除导入这些库的代码。
+
+
+### 2.2 Java代码规范
+
+#### 2.2.1 字段定义和命名
+
+
+所有属性应在该文件的顶部被声明, 遵循下面的规则:
+
+* 不是静态私有属性不要使用`m`开始，正确示例：
+
+```
+    userSignedIn, userNameText, acceptButton
+```
+
+错误示范:
+
+```
+mUserSignedIn, mUserNameText, mAcceptButton
+```
+
+* 静态私有属性使用需要使用`s`开始,正确示例：
+
+```
+someStaticField, userNameText
+```
+
+错误示范:
+```
+sSomeStaticField, sUserNameText
+```
+
+* 其他属性使用小写字母开头：
+
+```java
+int numOfChildren;
+String username;
+```
+
+* 静态的终态（final）属性（即常量），所有字母要大写。
+
+```java
+private static final int PAGE_COUNT = 0;
+```
+
+属性名称不应定义模糊，比如：
+
+```java
+int e; //列表中的元素的数目
+```
+
+使用他的作用作为名称，而不是留下注释来说明。这样更好
+
+```java
+int numberOfElements;
+```
+
+#### 2.2.1.2 View属性名
+
+当属性涉及views时，名称的最后一个单词应该是`view`,比如：
+
+| View           | Name              |
+|----------------|-------------------|
+| TextView       | usernameView      |
+| Button         | acceptLoginView   |
+| ImageView      | profileAvatarView |
+| RelativeLayout | profileLayout     |
+
+这样我们可以轻松地确认属性属于谁。例如，有一个字段中命名为**用户**，他是一个非常模糊的名称。给它的命名为usernameView，userAvatarView或userProfieLayout有助于弄清楚属性属于谁。
+
+在以前通常使用view的类型作为结尾（acceptLoginButton），但当views发生改变时，通常会忘记回到java类中去修改属性名称。
+
+#### 2.2.2 避免与容器类型相同
+
+当创建一个集合变量时，我们命名应该避免使用容器类型。比如，我们有一个包含用户列表ArrayList
+
+应该这样命名：
+```java
+List<String> userIds = new ArrayList<>();
+```
+
+而不应该：
+
+```java
+List<String> userIdList = new ArrayList<>();
+```
+
+当我们更改容器时，我们通常会忘记更改名称，就像view的命名，他是不必要的。正确的名称包含他的属性信息就足够了。
+
+
+#### 2.2.3 避免相似的名称
+
+命名相似名称的变量、方法或类，会使其他开发人员阅读代码时产生混淆，比如：
+
+```
+hasUserSelectedSingleProfilePreviously
+
+hasUserSelectedSignedProfilePreviously
+```
+乍看之下可能很难找到他们之间的区别。一个更清晰的命名方式可以使开发人员更容易操作你的代码。
