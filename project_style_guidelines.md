@@ -140,7 +140,7 @@ public void setCount(String count) {
 
 
 
-#### 2.1.2 Never catch generic exceptions
+#### 2.1.2 不要捕捉普通异常
 
 捕捉异常时不应该有下面的情况：
 
@@ -314,3 +314,117 @@ hasUserSelectedSingleProfilePreviously
 hasUserSelectedSignedProfilePreviously
 ```
 乍看之下可能很难找到他们之间的区别。一个更清晰的命名方式可以使开发人员更容易操作你的代码。
+
+#### 2.2.4 连续数字命名
+
+当Android Studio给我们自动创建代码时，他会使用连续数字命名，这是参数命名是可怕的！比如，这样不太好：
+```java
+public void doSomething(String s1, String s2, String s3)
+```
+
+没有阅读注释很难了解这些参数，相反：
+```java
+public void doSomething(String userName, String userEmail, String userId)
+```
+
+这样就很容易理解，现在我们根据代码就能够清晰的了解参数的意义🙂
+
+#### 2.2.5 Pronouncable names
+
+当命名属性、方法和类时应该：
+
+* 容易阅读：有效的命名能够阅读同时就能理解他表达的意思，减少去理解他的意义消耗的时间。
+
+* 容易发音：容易朗读的命名，可以避免当你和他人对话时你试图发音一个命名的尴尬。
+
+* 容易寻找：没有什么比试图在一个类中寻找一个被拼写错了（或严重糟糕）的方法或变量更糟糕了。如果我们试图找到**搜索用户**的方法，那么当搜索`search`时他就应该出现。
+
+* 不要使用匈牙利表示法：匈牙利表示法违背上述提出的三点，所以绝对不能用！
+
+#### 2.2.6 缩写的单词必须大写
+
+所有的包含缩写的类、变量名等都应该使用大写来处理。比如：
+
+| Good            | bad             |
+|-----------------|-----------------|
+| setUserId       | setUserID       |
+| String uri      | String URI      |
+| int id          | int ID          |
+| parseHtml       | parseHTML       |
+| generateXmlFile | generateXMLFile |
+
+#### 2.2.7 避免特殊整理变量申明
+
+所有的变量申明不应该使用特殊方式来对齐。比如：
+
+正常的代码:
+```java
+private int userId = 8;
+private int count = 0;
+private String username = "hitherejoe";
+```
+避免这样:
+```java
+private String username = "hitherejoe";
+private int userId      = 8;
+private int count       = 0;
+```
+这种声明方式在阅读时可能难以理解空白的字符串。
+
+#### 2.2.8 缩进
+
+对于代码块，缩进应该使用4个空格：
+```java
+if (userSignedIn) {
+    count = 1;
+}
+```
+而当包裹多行，缩进应该使用8个空格：
+
+```java
+    String userAboutText =
+            "This is some text about the user and it is pretty long, can you see!"
+```
+### 2.2.9 If-Statements
+
+#### 2.2.9.1 大括号规范
+
+大括号通常应该和他之前的代码同行，避免这样：
+
+```java
+class SomeClass
+{
+	private void someFunction()
+	{
+    	if (isSomething)
+    	{
+
+    	}
+    	else if (!isSomethingElse)
+    	{
+
+    	}
+    	else
+    	{
+
+    	}
+	}
+}
+```
+
+这样更好:
+
+```java
+class SomeClass {
+	private void someFunction() {
+    	if (isSomething) {
+
+    	} else if (!isSomethingElse) {
+
+    	} else {
+
+    	}
+	}
+}
+```
+Not only is the extra line for the space not really necessary, but it makes blocks easier to follow when reading the code.
