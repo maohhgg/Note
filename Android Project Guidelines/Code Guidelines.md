@@ -365,3 +365,697 @@ if (userSignedIn) {
 ```
 
 这使得语句更容易阅读并且嵌套除去了额外的行。
+
+#### 2.2.9.4 三元运算
+
+在合适的地方，使用三元运算简化操作，比如，这样更容易阅读：
+
+```java
+userStatusImage = signedIn ? R.drawable.ic_tick : R.drawable.ic_cross;
+```
+而且使用更少的行比下面这样：
+
+```java
+if (signedIn) {
+    userStatusImage = R.drawable.ic_tick;
+} else {
+    userStatusImage = R.drawable.ic_cross;
+}
+```
+
+### 2.2.10 注释
+
+#### 2.2.10.1 注释实践
+
+Android代码风格：
+
+**@Override:** @Override 注释必须是方法声明覆盖了实现的接口或父类的方法。举个例子，如果你使用@inheritdocs Javadoc标签，从一个类派生（不是实现），你也必须标注该方法@Overrides了父类的方法
+
+**@SuppressWarnings:** @SuppressWarnings 注释应该只在它是不出现警告的情况下使用。如果警告你确定它不是问题，就应该使用@SuppressWarning。所以确保所有警告的代码没有问题。
+
+
+----------
+
+注释尽可能多。比如，当你一个属性可能是空时可以用@Nullable注释，例子：
+```java
+@Nullable TextView userNameText;
+
+private void getName(@Nullable String name) { }
+```
+
+#### 2.2.10.2 注释风格
+
+所应用方法或类的注释应该在声明中定义，每个注释单独一行：
+
+```java
+@Annotation
+@AnotherAnnotation
+public class SomeClass {
+
+  @SomeAnotation
+  public String getMeAString() {
+
+  }
+
+}
+```
+
+当给属性添加注释时，应该确保注释在同一行上且有多余空间。比如：
+
+```java
+@Bind(R.id.layout_coordinator) CoordinatorLayout coordinatorLayout;
+
+@Inject MainPresenter mainPresenter;
+```
+我们这样做是因为它使语句更易于阅读。例如，`@Inject SomeComponent mSomeName`意味着这个变量代表此组件
+
+#### 2.2.11 限制变量的作用域
+
+局部变量的范围应保持在最低限度（Effective Java Item 29）。通过这样做，增加代码的可读性和可维护性，减少出错的可能性。每个变量都应该在封闭在所用的代码块中，外部不可以访问。
+
+局部变量应当在其第一次使用时声明，每个局部变量申明时都要初始化。如果你没有足够的信息来初始化变量，你应该推迟申明变量，直到你要使用他。-- Android代码风格
+
+
+#### 2.2.12 未使用的元素
+
+所有未使用的**属性** 、**导入（imports）** 、**方法** 和**类**应该从代码中删除，除非后面注释有它有任何具体的理由。
+
+#### 2.2.13 Order Import Statements 导入顺序
+
+使用Android Studio时，导入会自动排序。而其他情况时也许不会自动排序，这时我们应该手动排序根据：
+
+1. Android库的导入
+2. 第三方库的导入
+3. J2EE和J2SE的导入
+4. 当前项目文件中的导入
+
+**提示：**
+
+* 导入应该按照字母顺序排列，大写字母应在小写之前（比如Z在a前）。
+
+* 每种分组之间应该用空行隔开，(android, com, JUnit, net, org, java, javax)
+
+
+#### 2.2.14 Logging
+
+Logging should be used to log useful error messages and/or other information that may be useful during development.
+
+
+| Log                               | Reason      |
+|-----------------------------------|-------------|
+| Log.v(String tag, String message) | verbose     |
+| Log.d(String tag, String message) | debug       |
+| Log.i(String tag, String message) | information |
+| Log.w(String tag, String message) | warning     |
+| Log.e(String tag, String message) | error       |
+
+
+We can set the `Tag` for the log as a `static final` field at the top of the class, for example:
+
+
+    private static final String TAG = MyActivity.class.getName();
+
+All verbose and debug logs must be disabled on release builds. On the other hand - information, warning and error logs should only be kept enabled if deemed necessary.
+
+
+    if (BuildConfig.DEBUG) {
+        Log.d(TAG, "Here's a log message");
+    }
+
+**Note:** Timber is the preferred logging method to be used. It handles the tagging for us, which saves us keeping a reference to a TAG.
+
+#### 2.2.15 Field Ordering
+
+Any fields declared at the top of a class file should be ordered in the following order:
+
+1. Enums
+2. Constants
+3. Dagger Injected fields
+4. Butterknife View Bindings
+5. private global variables
+6. public global variables
+
+For example:
+
+	public static enum {
+		ENUM_ONE, ENUM_TWO
+	}
+
+	public static final String KEY_NAME = "KEY_NAME";
+	public static final int COUNT_USER = 0;
+
+	@Inject SomeAdapter someAdapter;
+
+	@BindView(R.id.text_name) TextView nameText;
+	@BindView(R.id.image_photo) ImageView photoImage;
+
+	private int userCount;
+	private String errorMessage;
+
+	public int someCount;
+	public String someString;
+
+Using this ordering convention helps to keep field declarations grouped, which increases both the locating of and readability of said fields.
+
+#### 2.2.16 Class member ordering
+
+
+To improve code readability, it’s important to organise class members in a logical manner. The following order should be used to achieve this:
+
+
+1. Constants
+2. Fields
+3. Constructors
+4. Override methods and callbacks (public or private)
+5. Public methods
+6. Private methods
+7. Inner classes or interfaces
+
+For example:
+
+
+    public class MainActivity extends Activity {
+
+        private int count;
+
+        public static newInstance() { }
+
+        @Override
+        public void onCreate() { }
+
+        public setUsername() { }
+
+        private void setupUsername() { }
+
+        static class AnInnerClass { }
+
+        interface SomeInterface { }
+
+    }
+
+Any lifecycle methods used in Android framework classes should be ordered in the corresponding lifecycle order. For example:
+
+
+    public class MainActivity extends Activity {
+
+        // Field and constructors
+
+        @Override
+        public void onCreate() { }
+
+        @Override
+        public void onStart() { }
+
+        @Override
+        public void onResume() { }
+
+        @Override
+        public void onPause() { }
+
+        @Override
+        public void onStop() { }
+
+        @Override
+        public void onRestart() { }
+
+        @Override
+        public void onDestroy() { }
+
+        // public methods, private methods, inner classes and interfaces
+
+    }
+
+#### 2.2.17 Method parameter ordering
+
+When defining methods, parameters should be ordered to the following convention:
+
+    public Post loadPost(Context context, int postId);
+
+
+    public void loadPost(Context context, int postId, Callback callback);
+
+**Context** parameters always go first and **Callback** parameters always go last.
+
+#### 2.2.18 String constants, naming, and values
+
+When using string constants, they should be declared as final static and use the follow conventions:
+
+[Strings table]
+
+#### 2.2.19 Enums
+
+Enums should only be used where actually required. If another method is possible, then that should be the preferred way of approaching the implementation. For example:
+
+Instead of this:
+
+
+    public enum SomeEnum {
+        ONE, TWO, THREE
+    }
+
+Do this:
+
+    private static final int VALUE_ONE = 1;
+    private static final int VALUE_TWO = 2;
+    private static final int VALUE_THREE = 3;
+
+#### 2.2.20 Arguments in fragments and activities
+
+When we pass data using an Intent or Bundle, the keys for the values must use the conventions defined below:
+
+**Activity**
+
+Passing data to an activity must be done using a reference to a KEY, as defined as below:
+
+
+    private static final String KEY_NAME = "com.your.package.name.to.activity.KEY_NAME";
+
+**Fragment**
+
+Passing data to a fragment must be done using a reference to an EXTRA, as defined as below:
+
+
+    private static final String EXTRA_NAME = "EXTRA_NAME";
+
+When creating new instances of a fragment or activity that involves passing data, we should provide a static method to retrieve the new instance, passing the data as method parameters. For example:
+
+**Activity**
+
+    public static Intent getStartIntent(Context context, Post post) {
+        Intent intent = new Intent(context, CurrentActivity.class);
+        intent.putParcelableExtra(EXTRA_POST, post);
+        return intent;
+    }
+
+**Fragment**
+
+    public static PostFragment newInstance(Post post) {
+        PostFragment fragment = new PostFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(ARGUMENT_POST, post);
+        fragment.setArguments(args)
+        return fragment;
+    }
+
+#### 2.2.21 Line Length Limit
+
+Code lines should exceed no longer than 100 characters, this makes the code more readable. Sometimes to achieve this, we may need to:
+
+
+- Extract data to a local variable
+- Extract logic to an external method
+- Line-wrap code to separate a single line of code to multiple lines
+
+**Note:** For code comments and import statements it’s ok to exceed the 100 character limit.
+
+#### 2.2.21.1 Line-wrapping techniques
+
+When it comes to line-wraps, there’s a few situations where we should be consistent in the way we format code.
+
+**Breaking at Operators**
+
+When we need to break a line at an operator, we break the line before the operator:
+
+
+    int count = countOne + countTwo - countThree + countFour * countFive - countSix
+            + countOnANewLineBecauseItsTooLong;
+
+If desirable, you can always break after the `=` sign:
+
+
+    int count =
+            countOne + countTwo - countThree + countFour * countFive + countSix;
+
+**Method Chaining**
+
+When it comes to method chaining, each method call should be on a new line.
+
+Don’t do this:
+
+
+    Picasso.with(context).load("someUrl").into(imageView);
+
+Instead, do this:
+
+
+    Picasso.with(context)
+            .load("someUrl")
+            .into(imageView);
+
+**Long Parameters**
+
+In the case that a method contains long parameters, we should line break where appropriate. For example when declaring a method we should break after the last comma of the parameter that fits:
+
+
+    private void someMethod(Context context, String someLongStringName, String text,
+                                long thisIsALong, String anotherString) {               
+    }             
+
+And when calling that method we should break after the comma of each parameter:
+
+
+    someMethod(context,
+            "thisIsSomeLongTextItsQuiteLongIsntIt",
+            "someText",
+            01223892365463456,
+            "thisIsSomeLongTextItsQuiteLongIsntIt");
+
+
+#### 2.2.22 Method spacing
+
+There only needs to be a single line space between methods in a class, for example:
+
+Do this:
+
+
+    public String getUserName() {
+        // Code
+    }
+
+    public void setUserName(String name) {
+        // Code
+    }
+
+    public boolean isUserSignedIn() {
+        // Code
+    }
+
+Not this:
+
+
+    public String getUserName() {
+        // Code
+    }
+
+
+    public void setUserName(String name) {
+        // Code
+    }
+
+
+    public boolean isUserSignedIn() {
+        // Code
+    }
+
+### 2.2.23 Comments
+
+#### 2.2.23.1 Inline comments
+
+Where necessary, inline comments should be used to provide a meaningful description to the reader on what a specific piece of code does. They should only be used in situations where the code may be complex to understand. In most cases however, code should be written in a way that it easy to understand without comments 🙂
+
+**Note:** Code comments do not have to, but should try to, stick to the 100 character rule.
+
+#### 2.2.23.2 JavaDoc Style Comments
+
+
+Whilst a method name should usually be enough to communicate a methods functionality, it can sometimes help to provide JavaDoc style comments. This helps the reader to easily understand the methods functionality, as well as the purpose of any parameters that are being passed into the method.
+
+
+    /**
+     * Authenticates the user against the API given a User id.
+     * If successful, this returns a success result
+     *
+     * @param userId The user id of the user that is to be authenticated.
+     */
+
+#### 2.2.23.3 Class comments
+
+When creating class comments they should be meaningful and descriptive, using links where necessary. For example:
+
+
+    /**
+      * RecyclerView adapter to display a list of {@link Post}.
+      * Currently used with {@link PostRecycler} to show the list of Post items.
+      */
+
+Don’t leave author comments, these aren’t useful and provide no real meaningful information when multiple people are to be working on the class.
+
+
+    /**
+      * Created By Joe 18/06/2016
+      */
+
+### 2.2.24 Sectioning code
+
+#### 2.2.24.1 Java code
+
+If creating ‘sections’ for code, this should be done using the following approach, like this:
+
+
+    public void method() { }
+
+    public void someOtherMethod() { }
+
+    /********* Mvp Method Implementations  ********/
+
+    public void anotherMethod() { }
+
+    /********* Helper Methods  ********/
+
+    public void someMethod() { }
+
+Not like this:
+
+
+    public void method() { }
+
+    public void someOtherMethod() { }
+
+    // Mvp Method Implementations
+
+    public void anotherMethod() { }
+
+This makes sectioned methods easier to located in a class.
+
+#### 2.2.24.2 Strings file
+
+String resources defined within the string.xml file should be section by feature, for example:
+
+
+    // User Profile Activity
+    <string name="button_save">Save</string>
+    <string name="button_cancel">Cancel</string>
+
+    // Settings Activity
+    <string name="message_instructions">...</string>
+
+Not only does this help keep the strings file tidy, but it makes it easier to find strings when they need altering.
+
+#### 2.2.24.3 RxJava chaining
+
+When chaining Rx operations, every operator should be on a new line, breaking the line before the period `.` . For example:
+
+
+    return dataManager.getPost()
+                .concatMap(new Func1<Post, Observable<? extends Post>>() {
+                    @Override
+                     public Observable<? extends Post> call(Post post) {
+                         return mRetrofitService.getPost(post.id);
+                     }
+                })
+                .retry(new Func2<Integer, Throwable, Boolean>() {
+                     @Override
+                     public Boolean call(Integer numRetries, Throwable throwable) {
+                         return throwable instanceof RetrofitError;
+                     }
+                });
+
+This makes it easier to understand the flow of operation within an Rx chain of calls.
+
+### 2.2.25 Butterknife
+
+#### 2.2.25.1 Event listeners
+
+Where possible, make use of Butterknife listener bindings. For example, when listening for a click event instead of doing this:
+
+
+    mSubmitButton.setOnClickListener(new View.OnClickListener() {
+        public void onClick(View v) {
+            // Some code here...
+        }
+      };
+
+Do this:
+
+
+    @OnClick(R.id.button_submit)
+    public void onSubmitButtonClick() { }
+
+
+## 2.3 XML Style Rules
+
+### 2.3.1 Use self=-closing tags
+
+When a View in an XML layout does not have any child views, self-closing tags should be used.
+
+Do:
+
+
+    <ImageView
+        android:id="@+id/image_user"
+        android:layout_width="90dp"
+        android:layout_height="90dp" />
+
+Don’t:
+
+
+    <ImageView
+        android:id="@+id/image_user"
+        android:layout_width="90dp"
+        android:layout_height="90dp">
+    </ImageView>
+
+
+### 2.3.2 Resource naming
+
+All resource names and IDs should be written using lowercase and underscores, for example:
+
+
+    text_username, activity_main, fragment_user, error_message_network_connection
+
+The main reason for this is consistency, it also makes it easier to search for views within layout files when it comes to altering the contents of the file.
+
+#### 2.3.2.1 ID naming
+
+All IDs should be prefixed using the name of the element that they have been declared for.
+
+| Element        | Prefix    |
+|----------------|-----------|
+| ImageView      | image_    |
+| Fragment       | fragment_ |
+| RelativeLayout | layout_   |
+| Button         | button_   |
+| TextView       | text_     |
+| View           | view_     |
+
+For example:
+
+
+    <TextView
+        android:id="@+id/text_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+Views that typically are only one per layout, such as a toolbar, can simply be given the id of it's view type. E.g.```toolbar```.
+
+#### 2.3.2.2 Strings
+
+All string names should begin with a prefix for the part of the application that they are being referenced from. For example:
+
+| Screen                | String         | Resource Name             |
+|-----------------------|----------------|---------------------------|
+| Registration Fragment | “Register now” | registration_register_now |
+| Sign Up Activity      | “Cancel”       | sign_up_cancel            |
+| Rate App Dialog       | “No thanks”    | rate_app_no_thanks        |
+
+If it’s not possible to name the referenced like the above, we can use the following rules:
+
+| Prefix  | Description                                  |
+|---------|----------------------------------------------|
+| error_  | Used for error messages                      |
+| title_  | Used for dialog titles                       |
+| action_ | Used for option menu actions                 |
+| msg_    | Used for generic message such as in a dialog |
+| label_  | Used for activity labels                     |
+
+Two important things to note for String resources:
+
+ - String resources should never be reused across screens. This can cause issues when it comes to changing a string for a specific screen. It saves future complications by having a single string for each screens usage.
+
+ - String resources should **always** be defined in the strings file and never hardcoded in layout or class files.
+
+#### 2.3.2.3 Styles and themes
+
+When defining both Styles & Themes, they should be named using UpperCamelCase. For example:
+
+
+    AppTheme.DarkBackground.NoActionBar
+    AppTheme.LightBackground.TransparentStatusBar
+
+    ProfileButtonStyle
+    TitleTextStyle
+
+
+### 2.3.3 Attributes ordering
+
+Ordering attributes not only looks tidy but it helps to make it quicker when looking for attributes within layout files. As a general rule,
+
+
+1. View Id
+2. Style
+3. Layout width and layout height
+4. Other `layout_` attributes, sorted alphabetically
+5. Remaining attributes, sorted alphabetically
+
+For example:
+
+    <Button
+        android:id="@id/button_accept"
+        style="@style/ButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:padding="16dp"
+        android:text="@string/button_skip_sign_in"
+        android:textColor="@color/bluish_gray" />
+
+Note: This formatting can be carried out by using the format feature in android studio -
+
+`cmd + shift + L`
+
+Doing this makes it easy to navigate through XML attributes when it comes to making changes to layout files.
+
+
+## 2.4 Tests style rules
+
+### 2.4.1 Unit tests
+
+Any Unit Test classes should be written to match the name of the class that the test are targeting, followed by the Test suffix. For example:
+
+| Class                | Test Class               |
+|----------------------|--------------------------|
+| DataManager          | DataManagerTest          |
+| UserProfilePresenter | UserProfilePresenterTest |
+| PreferencesHelper    | PreferencesHelperTest    |
+
+All Test methods should be annotated with the `@Test` annotation, the methods should be named using the following template:
+
+
+    @Test
+    public void methodNamePreconditionExpectedResult() { }
+
+So for example, if we want to check that the signUp() method with an invalid email address fails, the test would look like:
+
+
+    @Test
+    public void signUpWithInvalidEmailFails() { }
+
+Tests should focus on testing only what the method name entitles, if there’s extra conditions being tested in your Test method then this should be moved to it’s own individual test.
+
+If a class we are testing contains many different methods, then the tests should be split across multiple test classes - this helps to keep the tests more maintainable and easier to locate. For example, a DatabaseHelper class may need to be split into multiple test classes such as :
+
+
+    DatabaseHelperUserTest
+    DatabaseHelperPostsTest
+    DatabaseHelperDraftsTest
+
+### 2.4.2 Espresso tests
+
+Each Espresso test class generally targets an Activity, so the name given to it should match that of the targeted Activity, again followed by Test. For example:
+
+| Class                | Test Class               |
+|----------------------|--------------------------|
+| MainActivity         | MainActivityTest         |
+| ProfileActivity      | ProfileActivityTest      |
+| DraftsActivity       | DraftsActivityTest       |
+
+When using the Espresso API, methods should be chained on new lines to make the statements more readable, for example:
+
+
+    onView(withId(R.id.text_title))
+            .perform(scrollTo())
+            .check(matches(isDisplayed()))
+
+Chaining calls in this style not only helps us stick to less than 100 characters per line but it also makes it easy to read the chain of events taking place in espresso tests.
