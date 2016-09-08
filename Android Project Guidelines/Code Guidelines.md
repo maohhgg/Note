@@ -440,7 +440,7 @@ public class SomeClass {
 
 所有未使用的**属性** 、**导入（imports）** 、**方法** 和**类**应该从代码中删除，除非后面注释有它有任何具体的理由。
 
-#### 2.2.13 Order Import Statements 导入顺序
+#### 2.2.13 导入顺序
 
 使用Android Studio时，导入会自动排序。而其他情况时也许不会自动排序，这时我们应该手动排序根据：
 
@@ -449,16 +449,16 @@ public class SomeClass {
 3. J2EE和J2SE的导入
 4. 当前项目文件中的导入
 
-**提示：**
+**注意：**
 
 * 导入应该按照字母顺序排列，大写字母应在小写之前（比如Z在a前）。
 
 * 每种分组之间应该用空行隔开，(android, com, JUnit, net, org, java, javax)
 
 
-#### 2.2.14 Logging
+#### 2.2.14 日志（Logging）
 
-Logging should be used to log useful error messages and/or other information that may be useful during development.
+日志应该记录在开发时有用的错误信息或其他信息。
 
 
 | Log                               | Reason      |
@@ -469,155 +469,158 @@ Logging should be used to log useful error messages and/or other information tha
 | Log.w(String tag, String message) | warning     |
 | Log.e(String tag, String message) | error       |
 
+我们可以在类开始位置设置`static final`的`TAG`属性让`log`使用。例子：
+```java
+private static final String TAG = MyActivity.class.getName();
+```
+在发布的版本中不应该记录`verbose`和`debug`级别的日志信息。其他级别的`information` `warning` `error`日志信息还是应该继续记录。
 
-We can set the `Tag` for the log as a `static final` field at the top of the class, for example:
+```java
+if (BuildConfig.DEBUG) {
+    Log.d(TAG, "Here's a log message");
+}
+```
 
+**注意:**
+Timber在使用时是优于Log方法的。他为我们处理TAG，不是我们去设定TAG。
 
-    private static final String TAG = MyActivity.class.getName();
+#### 2.2.15 属性的排序
 
-All verbose and debug logs must be disabled on release builds. On the other hand - information, warning and error logs should only be kept enabled if deemed necessary.
+在类文件的顶部声明的任何属性应该按以下顺序进行排序：
 
-
-    if (BuildConfig.DEBUG) {
-        Log.d(TAG, "Here's a log message");
-    }
-
-**Note:** Timber is the preferred logging method to be used. It handles the tagging for us, which saves us keeping a reference to a TAG.
-
-#### 2.2.15 Field Ordering
-
-Any fields declared at the top of a class file should be ordered in the following order:
-
-1. Enums
-2. Constants
-3. Dagger Injected fields
-4. Butterknife View Bindings
-5. private global variables
-6. public global variables
-
-For example:
-
-	public static enum {
-		ENUM_ONE, ENUM_TWO
-	}
-
-	public static final String KEY_NAME = "KEY_NAME";
-	public static final int COUNT_USER = 0;
-
-	@Inject SomeAdapter someAdapter;
-
-	@BindView(R.id.text_name) TextView nameText;
-	@BindView(R.id.image_photo) ImageView photoImage;
-
-	private int userCount;
-	private String errorMessage;
-
-	public int someCount;
-	public String someString;
-
-Using this ordering convention helps to keep field declarations grouped, which increases both the locating of and readability of said fields.
-
-#### 2.2.16 Class member ordering
-
-
-To improve code readability, it’s important to organise class members in a logical manner. The following order should be used to achieve this:
-
-
-1. Constants
-2. Fields
-3. Constructors
-4. Override methods and callbacks (public or private)
-5. Public methods
-6. Private methods
-7. Inner classes or interfaces
+1. 枚举类型（Enums）
+2. 常量
+3. 依赖注入
+4. 注解式绑定控件
+5. 私有全局变量
+6. 公共全局变量
 
 For example:
+```java
+public static enum {
+	ENUM_ONE, ENUM_TWO
+}
 
+public static final String KEY_NAME = "KEY_NAME";
+public static final int COUNT_USER = 0;
 
-    public class MainActivity extends Activity {
+@Inject SomeAdapter someAdapter;
 
-        private int count;
+@BindView(R.id.text_name) TextView nameText;
+@BindView(R.id.image_photo) ImageView photoImage;
 
-        public static newInstance() { }
+private int userCount;
+private String errorMessage;
 
-        @Override
-        public void onCreate() { }
+public int someCount;
+public String someString;
+```
 
-        public setUsername() { }
+使用该排序习惯有助于字段声明进行分组，从而方便属性的定位和可读性。
 
-        private void setupUsername() { }
+#### 2.2.16 类成员排序
 
-        static class AnInnerClass { }
+为了改善代码可读性，按一定逻辑的对类成员进行排序是非常重要的。应该按以下规则来排序：
 
-        interface SomeInterface { }
+1. 常量
+2. 属性
+3. 构造函数
+4. 覆盖的方法和回调方法（私有或公共的）
+5. 公共方法
+6. 私有方法
+7. 内部类或内部接口
 
-    }
+实例:
 
-Any lifecycle methods used in Android framework classes should be ordered in the corresponding lifecycle order. For example:
+```java
+public class MainActivity extends Activity {
 
+    private int count;
 
-    public class MainActivity extends Activity {
+    public static newInstance() { }
 
-        // Field and constructors
+    @Override
+    public void onCreate() { }
 
-        @Override
-        public void onCreate() { }
+    public setUsername() { }
 
-        @Override
-        public void onStart() { }
+    private void setupUsername() { }
 
-        @Override
-        public void onResume() { }
+    static class AnInnerClass { }
 
-        @Override
-        public void onPause() { }
+    interface SomeInterface { }
 
-        @Override
-        public void onStop() { }
+}
+```
 
-        @Override
-        public void onRestart() { }
+所有的生命周期方法应该按照安卓框架类定义的组件的生命周期来排序，比如：
 
-        @Override
-        public void onDestroy() { }
+```java
+public class MainActivity extends Activity {
 
-        // public methods, private methods, inner classes and interfaces
+    // Field and constructors
 
-    }
+    @Override
+    public void onCreate() { }
 
-#### 2.2.17 Method parameter ordering
+    @Override
+    public void onStart() { }
 
-When defining methods, parameters should be ordered to the following convention:
+    @Override
+    public void onResume() { }
 
-    public Post loadPost(Context context, int postId);
+    @Override
+    public void onPause() { }
 
+    @Override
+    public void onStop() { }
 
-    public void loadPost(Context context, int postId, Callback callback);
+    @Override
+    public void onRestart() { }
 
-**Context** parameters always go first and **Callback** parameters always go last.
+    @Override
+    public void onDestroy() { }
 
-#### 2.2.18 String constants, naming, and values
+    // public methods, private methods, inner classes and interfaces
 
-When using string constants, they should be declared as final static and use the follow conventions:
+}
+```
+
+#### 2.2.17 方法参数的排序
+
+定义方法时，参数排序应该遵循：
+```java
+public Post loadPost(Context context, int postId);
+
+public void loadPost(Context context, int postId, Callback callback);
+```
+
+**Context** 参数始终在第一位 **Callback** 参数始终在最尾。
+
+#### 2.2.18 字符串常量命名和值
+
+当使用字符串常量，它们应该被声明为final的静态和使用如下约定：
 
 [Strings table]
 
-#### 2.2.19 Enums
+**注意** 翻译不懂?
 
-Enums should only be used where actually required. If another method is possible, then that should be the preferred way of approaching the implementation. For example:
+#### 2.2.19 枚举（Enums）
 
-Instead of this:
+需要时才使用枚举，如果其他方法需要，那么实现的方式不应该用枚举。
 
-
-    public enum SomeEnum {
-        ONE, TWO, THREE
-    }
-
-Do this:
-
-    private static final int VALUE_ONE = 1;
-    private static final int VALUE_TWO = 2;
-    private static final int VALUE_THREE = 3;
+不应该这样使用：
+```java
+public enum SomeEnum {
+    ONE, TWO, THREE
+}
+```
+这样更好：
+```java
+private static final int VALUE_ONE = 1;
+private static final int VALUE_TWO = 2;
+private static final int VALUE_THREE = 3;
+```
 
 #### 2.2.20 Arguments in fragments and activities
 
