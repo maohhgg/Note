@@ -383,9 +383,9 @@ if (signedIn) {
 }
 ```
 
-### 2.2.10 注释
+### 2.2.10 预定义的注释
 
-#### 2.2.10.1 注释实践
+#### 2.2.10.1 注释实例
 
 Android代码风格：
 
@@ -597,7 +597,7 @@ public void loadPost(Context context, int postId, Callback callback);
 
 **Context** 参数始终在第一位 **Callback** 参数始终在最尾。
 
-#### 2.2.18 字符串常量命名和值
+#### 2.2.18 字符串常量命名和值 （*****）
 
 当使用字符串常量，它们应该被声明为final的静态和使用如下约定：
 
@@ -605,9 +605,9 @@ public void loadPost(Context context, int postId, Callback callback);
 
 **注意** 翻译不懂?
 
-#### 2.2.19 枚举（Enums）
+#### 2.2.19 枚举（Enums） （*****）
 
-需要时才使用枚举，如果其他方法需要，那么实现的方式不应该用枚举。
+需要时才使用枚举，如果在其他方法需要，那么实现的方式不应该用枚举。
 
 不应该这样使用：
 ```java
@@ -622,305 +622,315 @@ private static final int VALUE_TWO = 2;
 private static final int VALUE_THREE = 3;
 ```
 
-#### 2.2.20 Arguments in fragments and activities
+#### 2.2.20 Fragments和Activities的参数 （*****）
 
-When we pass data using an Intent or Bundle, the keys for the values must use the conventions defined below:
-
-**Activity**
-
-Passing data to an activity must be done using a reference to a KEY, as defined as below:
-
-
-    private static final String KEY_NAME = "com.your.package.name.to.activity.KEY_NAME";
-
-**Fragment**
-
-Passing data to a fragment must be done using a reference to an EXTRA, as defined as below:
-
-
-    private static final String EXTRA_NAME = "EXTRA_NAME";
-
-When creating new instances of a fragment or activity that involves passing data, we should provide a static method to retrieve the new instance, passing the data as method parameters. For example:
+当我们使用Intent或Bundle传递数据时，键名和值必须规范。
 
 **Activity**
 
-    public static Intent getStartIntent(Context context, Post post) {
-        Intent intent = new Intent(context, CurrentActivity.class);
-        intent.putParcelableExtra(EXTRA_POST, post);
-        return intent;
-    }
-
+传递数据到其他Activity必须使用KEY，定义遵循：
+```java
+private static final String KEY_NAME = "com.your.package.name.to.activity.KEY_NAME";
+```
 **Fragment**
 
-    public static PostFragment newInstance(Post post) {
-        PostFragment fragment = new PostFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(ARGUMENT_POST, post);
-        fragment.setArguments(args)
-        return fragment;
-    }
+传递数据到其他Activity必须使用EXTRA，定义遵循：
 
-#### 2.2.21 Line Length Limit
+```java
+private static final String EXTRA_NAME = "EXTRA_NAME";
+```
 
-Code lines should exceed no longer than 100 characters, this makes the code more readable. Sometimes to achieve this, we may need to:
+当创建新的Fragment或Activity实例，向实例传递数据时，我们应该提供一个静态方法来获取新的实例，传递数据的方法参数。 例如：
 
+**Activity**
+```java
+public static Intent getStartIntent(Context context, Post post) {
+    Intent intent = new Intent(context, CurrentActivity.class);
+    intent.putParcelableExtra(EXTRA_POST, post);
+    return intent;
+}
+```
+**Fragment**
+```java
+public static PostFragment newInstance(Post post) {
+    PostFragment fragment = new PostFragment();
+    Bundle args = new Bundle();
+    args.putParcelable(ARGUMENT_POST, post);
+    fragment.setArguments(args)
+    return fragment;
+}
+```
 
-- Extract data to a local variable
-- Extract logic to an external method
-- Line-wrap code to separate a single line of code to multiple lines
+#### 2.2.21 行长度限制
 
-**Note:** For code comments and import statements it’s ok to exceed the 100 character limit.
+代码长度尽量不要超过100个字符，他使得更难阅读代码，为了这样我们应该遵循：
 
-#### 2.2.21.1 Line-wrapping techniques
+* 数据提取到一个局部变量
+* 逻辑由外部方法实现
+* 有的代码可以换行分割成几行
 
-When it comes to line-wraps, there’s a few situations where we should be consistent in the way we format code.
 
-**Breaking at Operators**
+**注意:** 对于注释和import语句不存在100字符的限制
 
-When we need to break a line at an operator, we break the line before the operator:
+#### 2.2.21.1 换行技巧
 
+对于太长的一行分割成几行的代码，我们应该保持代码的样式一致。
 
-    int count = countOne + countTwo - countThree + countFour * countFive - countSix
-            + countOnANewLineBecauseItsTooLong;
+**分割运算**
 
-If desirable, you can always break after the `=` sign:
+有时使用运算符，导致这一行太长，我们应该分割这个运算符。
 
+```java
+int count = countOne + countTwo - countThree + countFour * countFive - countSix
+        + countOnANewLineBecauseItsTooLong;
+```
 
-    int count =
-            countOne + countTwo - countThree + countFour * countFive + countSix;
+当然，你也可以这样分割：
 
-**Method Chaining**
+```
+int count =
+        countOne + countTwo - countThree + countFour * countFive + countSix;
+```
+**方法链**
 
-When it comes to method chaining, each method call should be on a new line.
+使用方法链时，尽量不要在一行使用。
 
-Don’t do this:
+不要这样
 
+```java
+Picasso.with(context).load("someUrl").into(imageView);
+```
+而该这样:
 
-    Picasso.with(context).load("someUrl").into(imageView);
+```java
+Picasso.with(context)
+        .load("someUrl")
+        .into(imageView);
+```
 
-Instead, do this:
+**太长的参数**
 
+在有的方法中包含许多的参数，我们应该在适当情况下换行。比如我们申明方法时有太多的参数时，我们在合适的参数后面换行：
 
-    Picasso.with(context)
-            .load("someUrl")
-            .into(imageView);
+```java
+private void someMethod(Context context, String someLongStringName, String text,
+                            long thisIsALong, String anotherString) {               
+}    
+```         
 
-**Long Parameters**
+当调用方法时，我们应该每个参数都换行：
 
-In the case that a method contains long parameters, we should line break where appropriate. For example when declaring a method we should break after the last comma of the parameter that fits:
+```java
+someMethod(context,
+        "thisIsSomeLongTextItsQuiteLongIsntIt",
+        "someText",
+        01223892365463456,
+        "thisIsSomeLongTextItsQuiteLongIsntIt");
+```
 
+#### 2.2.22 方法间隔
 
-    private void someMethod(Context context, String someLongStringName, String text,
-                                long thisIsALong, String anotherString) {               
-    }             
+在方法之间只应该空一行。
 
-And when calling that method we should break after the comma of each parameter:
+正确：
 
+```java
+public String getUserName() {
+    // Code
+}
 
-    someMethod(context,
-            "thisIsSomeLongTextItsQuiteLongIsntIt",
-            "someText",
-            01223892365463456,
-            "thisIsSomeLongTextItsQuiteLongIsntIt");
+public void setUserName(String name) {
+    // Code
+}
 
+public boolean isUserSignedIn() {
+    // Code
+}
+```
+错误示范：
 
-#### 2.2.22 Method spacing
+```java
+public String getUserName() {
+    // Code
+}
 
-There only needs to be a single line space between methods in a class, for example:
 
-Do this:
+public void setUserName(String name) {
+    // Code
+}
 
 
-    public String getUserName() {
-        // Code
-    }
+public boolean isUserSignedIn() {
+    // Code
+}
+```
 
-    public void setUserName(String name) {
-        // Code
-    }
+### 2.2.23 注释
 
-    public boolean isUserSignedIn() {
-        // Code
-    }
+#### 2.2.23.1 行内注释
 
-Not this:
+在必要时，内部注释被用来向读者提供这一段代码的意义，它只应在代码复杂难以理解的情况下使用。然而，在大多数情况下，代码应该被写的相当简单便于阅读而不需要注释
 
+**注意:** 行内注释尽量保持不超过100字符
 
-    public String getUserName() {
-        // Code
-    }
+#### 2.2.23.2 JavaDoc风格注释
 
+方法的应该命名为描述方法的功能。JavaDoc风格注释的内容，是使得更容易理解方法的功能，以及传递到方法的所有参数的作用。
 
-    public void setUserName(String name) {
-        // Code
-    }
 
+```java
+/**
+ * Authenticates the user against the API given a User id.
+ * If successful, this returns a success result
+ *
+ * @param userId The user id of the user that is to be authenticated.
+ */
+ ```
 
-    public boolean isUserSignedIn() {
-        // Code
-    }
+#### 2.2.23.3 类注释
 
-### 2.2.23 Comments
+创建的类注释应该是有意义的、描述性的。在需要的地方使用@link，例如：
 
-#### 2.2.23.1 Inline comments
+```java
+/**
+  * RecyclerView adapter to display a list of {@link Post}.
+  * Currently used with {@link PostRecycler} to show the list of Post items.
+  */
+```
 
-Where necessary, inline comments should be used to provide a meaningful description to the reader on what a specific piece of code does. They should only be used in situations where the code may be complex to understand. In most cases however, code should be written in a way that it easy to understand without comments 🙂
+关于作者注释，当有很多人使用和修改这个类时，这个注释并不能提供任何有用的信息。
 
-**Note:** Code comments do not have to, but should try to, stick to the 100 character rule.
+```java
+/**
+  * Created By Joe 18/06/2016
+  */
+```
 
-#### 2.2.23.2 JavaDoc Style Comments
+### 2.2.24 分割代码
 
+#### 2.2.24.1 Java代码
 
-Whilst a method name should usually be enough to communicate a methods functionality, it can sometimes help to provide JavaDoc style comments. This helps the reader to easily understand the methods functionality, as well as the purpose of any parameters that are being passed into the method.
+当使用注释分割代码时，注释应该遵循下面这样的方式：
 
+```java
+public void method() { }
 
-    /**
-     * Authenticates the user against the API given a User id.
-     * If successful, this returns a success result
-     *
-     * @param userId The user id of the user that is to be authenticated.
-     */
+public void someOtherMethod() { }
 
-#### 2.2.23.3 Class comments
+/********* Mvp Method Implementations  ********/
 
-When creating class comments they should be meaningful and descriptive, using links where necessary. For example:
+public void anotherMethod() { }
 
+/********* Helper Methods  ********/
 
-    /**
-      * RecyclerView adapter to display a list of {@link Post}.
-      * Currently used with {@link PostRecycler} to show the list of Post items.
-      */
+public void someMethod() { }
+```
+不要这样：
 
-Don’t leave author comments, these aren’t useful and provide no real meaningful information when multiple people are to be working on the class.
+```java
+public void method() { }
 
+public void someOtherMethod() { }
 
-    /**
-      * Created By Joe 18/06/2016
-      */
+// Mvp Method Implementations
 
-### 2.2.24 Sectioning code
+public void anotherMethod() { }
+```
 
-#### 2.2.24.1 Java code
+这使得分割的方法比较容易在一个类来定位。
 
-If creating ‘sections’ for code, this should be done using the following approach, like this:
+#### 2.2.24.2 字符串文件
 
+字符串资源在`string.xml`文件中定义，且按功能分割成组，比如：
 
-    public void method() { }
+```xml
+// User Profile Activity
+<string name="button_save">Save</string>
+<string name="button_cancel">Cancel</string>
 
-    public void someOtherMethod() { }
-
-    /********* Mvp Method Implementations  ********/
-
-    public void anotherMethod() { }
-
-    /********* Helper Methods  ********/
-
-    public void someMethod() { }
-
-Not like this:
-
-
-    public void method() { }
-
-    public void someOtherMethod() { }
-
-    // Mvp Method Implementations
-
-    public void anotherMethod() { }
-
-This makes sectioned methods easier to located in a class.
-
-#### 2.2.24.2 Strings file
-
-String resources defined within the string.xml file should be section by feature, for example:
-
-
-    // User Profile Activity
-    <string name="button_save">Save</string>
-    <string name="button_cancel">Cancel</string>
-
-    // Settings Activity
-    <string name="message_instructions">...</string>
-
-Not only does this help keep the strings file tidy, but it makes it easier to find strings when they need altering.
+// Settings Activity
+<string name="message_instructions">...</string>
+```
+这不仅有助于保持字符串文件整齐，而且当需要改变内容时更容易找到字符串。
 
 #### 2.2.24.3 RxJava chaining
 
-When chaining Rx operations, every operator should be on a new line, breaking the line before the period `.` . For example:
+当Rx链式操作时，都应该在`.`之前换一行，比如：
 
-
-    return dataManager.getPost()
-                .concatMap(new Func1<Post, Observable<? extends Post>>() {
-                    @Override
-                     public Observable<? extends Post> call(Post post) {
-                         return mRetrofitService.getPost(post.id);
-                     }
-                })
-                .retry(new Func2<Integer, Throwable, Boolean>() {
-                     @Override
-                     public Boolean call(Integer numRetries, Throwable throwable) {
-                         return throwable instanceof RetrofitError;
-                     }
-                });
-
-This makes it easier to understand the flow of operation within an Rx chain of calls.
+```java
+return dataManager.getPost()
+            .concatMap(new Func1<Post, Observable<? extends Post>>() {
+                @Override
+                 public Observable<? extends Post> call(Post post) {
+                     return mRetrofitService.getPost(post.id);
+                 }
+            })
+            .retry(new Func2<Integer, Throwable, Boolean>() {
+                 @Override
+                 public Boolean call(Integer numRetries, Throwable throwable) {
+                     return throwable instanceof RetrofitError;
+                 }
+            });
+```
+这使得更容易理解的链操作的流程。
 
 ### 2.2.25 Butterknife
 
-#### 2.2.25.1 Event listeners
+#### 2.2.25.1 事件侦听
 
-Where possible, make use of Butterknife listener bindings. For example, when listening for a click event instead of doing this:
+在需要时，使用Butterknife绑定监听器，比如单击事件的绑定就应该是：
 
+```java
+mSubmitButton.setOnClickListener(new View.OnClickListener() {
+    public void onClick(View v) {
+        // Some code here...
+    }
+  };
+```
+不是这样：
 
-    mSubmitButton.setOnClickListener(new View.OnClickListener() {
-        public void onClick(View v) {
-            // Some code here...
-        }
-      };
+```java
+@OnClick(R.id.button_submit)
+public void onSubmitButtonClick() { }
+```
 
-Do this:
+## 2.3  XML样式规则
 
+### 2.3.1 使用自己的关闭标签
 
-    @OnClick(R.id.button_submit)
-    public void onSubmitButtonClick() { }
+当在一个XML布局视图没有任何子标签时，应使用自结束标签。
 
+这样：
 
-## 2.3 XML Style Rules
+```xml
+<ImageView
+    android:id="@+id/image_user"
+    android:layout_width="90dp"
+    android:layout_height="90dp" />
+```
+不要这样：
 
-### 2.3.1 Use self=-closing tags
+```xml
+<ImageView
+    android:id="@+id/image_user"
+    android:layout_width="90dp"
+    android:layout_height="90dp">
+</ImageView>
+```
 
-When a View in an XML layout does not have any child views, self-closing tags should be used.
+### 2.3.2 资源命名
 
-Do:
+所有的资源名称和ID都应该使用小写和下划线，示例：
 
+```
+text_username, activity_main, fragment_user, error_message_network_connection
+```
 
-    <ImageView
-        android:id="@+id/image_user"
-        android:layout_width="90dp"
-        android:layout_height="90dp" />
+这样可以保持一致， 当想更改布局文件时更容易找到这个文件。
 
-Don’t:
+#### 2.3.2.1 ID命名
 
-
-    <ImageView
-        android:id="@+id/image_user"
-        android:layout_width="90dp"
-        android:layout_height="90dp">
-    </ImageView>
-
-
-### 2.3.2 Resource naming
-
-All resource names and IDs should be written using lowercase and underscores, for example:
-
-
-    text_username, activity_main, fragment_user, error_message_network_connection
-
-The main reason for this is consistency, it also makes it easier to search for views within layout files when it comes to altering the contents of the file.
-
-#### 2.3.2.1 ID naming
-
-All IDs should be prefixed using the name of the element that they have been declared for.
+所有的ID命名都应该使用他的元素作为前缀。
 
 | Element        | Prefix    |
 |----------------|-----------|
@@ -931,20 +941,20 @@ All IDs should be prefixed using the name of the element that they have been dec
 | TextView       | text_     |
 | View           | view_     |
 
-For example:
+比如:
 
+```xml
+<TextView
+    android:id="@+id/text_username"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />
+```
 
-    <TextView
-        android:id="@+id/text_username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+特殊View只出现一次在布局文件中，可以直接给他定义为元素名称。比如`toolbar`。
 
+#### 2.3.2.2 字符串
 
-Views that typically are only one per layout, such as a toolbar, can simply be given the id of it's view type. E.g.```toolbar```.
-
-#### 2.3.2.2 Strings
-
-All string names should begin with a prefix for the part of the application that they are being referenced from. For example:
+所有的字符串名称应该与他们正被应用程序引用的一部分作为前缀开头。比如：
 
 | Screen                | String         | Resource Name             |
 |-----------------------|----------------|---------------------------|
@@ -952,7 +962,7 @@ All string names should begin with a prefix for the part of the application that
 | Sign Up Activity      | “Cancel”       | sign_up_cancel            |
 | Rate App Dialog       | “No thanks”    | rate_app_no_thanks        |
 
-If it’s not possible to name the referenced like the above, we can use the following rules:
+如果这是不被引用的，我们可以使用下面的规则：
 
 | Prefix  | Description                                  |
 |---------|----------------------------------------------|
@@ -962,23 +972,23 @@ If it’s not possible to name the referenced like the above, we can use the fol
 | msg_    | Used for generic message such as in a dialog |
 | label_  | Used for activity labels                     |
 
-Two important things to note for String resources:
+字符串资源有两个重点：
 
- - String resources should never be reused across screens. This can cause issues when it comes to changing a string for a specific screen. It saves future complications by having a single string for each screens usage.
+* 字符串资源不应该在整个屏幕上重复使用。当想改变屏幕中一个字符串时会出现额外问题。每处使用单独的字符串定义解决未来可能会出现的问题
 
- - String resources should **always** be defined in the strings file and never hardcoded in layout or class files.
+* 字符串**通常**在`strings.xml`中定义，不再类文件中直接使用字符串。
 
-#### 2.3.2.3 Styles and themes
+#### 2.3.2.3 样式和主题
 
-When defining both Styles & Themes, they should be named using UpperCamelCase. For example:
+当定义样式和主题时，通常使用驼峰命名法来命名。比如：
 
+```
+AppTheme.DarkBackground.NoActionBar
+AppTheme.LightBackground.TransparentStatusBar
 
-    AppTheme.DarkBackground.NoActionBar
-    AppTheme.LightBackground.TransparentStatusBar
-
-    ProfileButtonStyle
-    TitleTextStyle
-
+ProfileButtonStyle
+TitleTextStyle
+```
 
 ### 2.3.3 Attributes ordering
 
