@@ -1,6 +1,7 @@
 ---
 title: ActionBar跟随滚动显示
-tag: Material Design
+tag:
+    - Material Design
 ---
 
 ## ActionBar跟随滚动显示

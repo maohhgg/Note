@@ -1,6 +1,7 @@
 ---
 title: Activity动画
-tag: Activity
+tag:
+    - Activity
 ---
 
 # Activity Transition
