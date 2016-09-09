@@ -1,3 +1,8 @@
+---
+title: Activity动画
+tag: Activity
+---
+
 # Activity Transition
 Activity Transition是Material Design中提供的一种动画效果。它通过运动和切换不同状态之间的元素来产生各种动画效果。
 

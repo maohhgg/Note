@@ -1,3 +1,8 @@
+---
+title: ActionBar跟随滚动显示
+tag: Material Design
+---
+
 ## ActionBar跟随滚动显示
 
 隐藏ActionBar的方法有很多，可以通过代码的方式隐藏，也可以通过配置文件的方式，本片介绍简单的方式**通过配置文件**
