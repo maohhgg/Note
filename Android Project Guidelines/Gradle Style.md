@@ -1,59 +1,60 @@
-# 3. Gradle Style
+# 3. Gradle样式
 
-## 3.1 Dependencies
+## 3.1 依赖
 
-### 3.1.1 Versioning
+### 3.1.1 依赖的版本
 
-Where applicable, versioning that is shared across multiple dependencies should be defined as a variable within the dependencies scope. For example:
+有时，多个依赖性有相同的版本那么相同的版本应该定义为变量。 例如
 
+```java
+final SUPPORT_LIBRARY_VERSION = '23.4.0'
 
-    final SUPPORT_LIBRARY_VERSION = '23.4.0'
+compile "com.android.support:support-v4:$SUPPORT_LIBRARY_VERSION"
+compile "com.android.support:recyclerview-v7:$SUPPORT_LIBRARY_VERSION"
+compile "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
+compile "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
+compile "com.android.support:percent:$SUPPORT_LIBRARY_VERSION"
+compile "com.android.support:customtabs:$SUPPORT_LIBRARY_VERSION"
+```
+未来只需要更改一个变量值就更改多个依赖的版本，这样是非常方便的。
 
-    compile "com.android.support:support-v4:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:recyclerview-v7:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:percent:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:customtabs:$SUPPORT_LIBRARY_VERSION"
+### 3.1.2 依赖的分组
 
-This makes it easy to update dependencies in the future as we only need to change the version number once for multiple dependencies.
-
-### 3.1.2 Grouping
-
-Where applicable, dependencies should be grouped by package name, with spaces in-between the groups. For example:
-
-
-    compile "com.android.support:percent:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:customtabs:$SUPPORT_LIBRARY_VERSION"
-
-    compile 'io.reactivex:rxandroid:1.2.0'
-    compile 'io.reactivex:rxjava:1.1.5'
-
-    compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'com.jakewharton.timber:timber:4.1.2'
-
-    compile 'com.github.bumptech.glide:glide:3.7.0'
+有时，我们需要根据包名把依赖进行分组，组与组之间用空行隔开，比如：
 
 
-`compile` , `testCompile` and `androidTestCompile`  dependencies should also be grouped into their corresponding section. For example:
+```java
+compile "com.android.support:percent:$SUPPORT_LIBRARY_VERSION"
+compile "com.android.support:customtabs:$SUPPORT_LIBRARY_VERSION"
+
+compile 'io.reactivex:rxandroid:1.2.0'
+compile 'io.reactivex:rxjava:1.1.5'
+
+compile 'com.jakewharton:butterknife:7.0.1'
+compile 'com.jakewharton.timber:timber:4.1.2'
+
+compile 'com.github.bumptech.glide:glide:3.7.0'
+```
+
+`compile`、`testCompile`和`androidTestCompile` 依赖应该分到它们相应的组，比如：
+```java
+// App Dependencies
+compile "com.android.support:support-v4:$SUPPORT_LIBRARY_VERSION"
+compile "com.android.support:recyclerview-v7:$SUPPORT_LIBRARY_VERSION"
+
+// Instrumentation test dependencies
+androidTestCompile "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
+
+// Unit tests dependencies
+testCompile 'org.robolectric:robolectric:3.0'
+```
+这两种方法使得寻找依赖变得容易，也使得依赖变得干净和整洁🙌
 
 
-    // App Dependencies
-    compile "com.android.support:support-v4:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:recyclerview-v7:$SUPPORT_LIBRARY_VERSION"
+### 3.1.3 单独的依赖
 
-    // Instrumentation test dependencies
-    androidTestCompile "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
+有时，依赖只用于应用或者测试，就应该确保他们只编译在 `compile`、`testCompile`或`androidTestCompile`。比如，robolectric依赖只用于单元测试，他就应该是这样：
 
-    // Unit tests dependencies
-    testCompile 'org.robolectric:robolectric:3.0'
-
-Both of these approaches makes it easy to locate specific dependencies when required as it keeps dependency declarations both clean and tidy 🙌
-
-
-### 3.1.3 Independent Dependencies
-
-Where dependencies are only used individually for application or test purposes, be sure to only compile them using `compile` , `testCompile` or `androidTestCompile` . For example, where the robolectric dependency is only required for unit tests, it should be added using:
-
-
-    testCompile 'org.robolectric:robolectric:3.0'
+```java
+testCompile 'org.robolectric:robolectric:3.0'
+```

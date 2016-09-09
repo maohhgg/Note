@@ -990,9 +990,9 @@ ProfileButtonStyle
 TitleTextStyle
 ```
 
-### 2.3.3 Attributes ordering
+### 2.3.3 属性排序
 
-Ordering attributes not only looks tidy but it helps to make it quicker when looking for attributes within layout files. As a general rule,
+属性的排序不仅要求整齐而且还要在布局文件中能快速定位属性。主要规则：
 
 
 1. View Id
@@ -1002,7 +1002,7 @@ Ordering attributes not only looks tidy but it helps to make it quicker when loo
 5. Remaining attributes, sorted alphabetically
 
 For example:
-
+```xml
     <Button
         android:id="@id/button_accept"
         style="@style/ButtonStyle"
@@ -1013,19 +1013,19 @@ For example:
         android:padding="16dp"
         android:text="@string/button_skip_sign_in"
         android:textColor="@color/bluish_gray" />
-
-Note: This formatting can be carried out by using the format feature in android studio -
-
-`cmd + shift + L`
-
-Doing this makes it easy to navigate through XML attributes when it comes to making changes to layout files.
+```
+**注意：** 此格式可以通过在Android Studio中格式功能进行格式化  - `cmd + shift + L`
 
 
-## 2.4 Tests style rules
 
-### 2.4.1 Unit tests
+当想更改布局文件属性时，更容易通过XML浏览找到属性.
 
-Any Unit Test classes should be written to match the name of the class that the test are targeting, followed by the Test suffix. For example:
+
+## 2.4 测试样式规则
+
+### 2.4.1 单元测试
+
+任何单元测试类名应该和测试目标类名匹配，结尾加上Test后缀。示例：
 
 | Class                | Test Class               |
 |----------------------|--------------------------|
@@ -1033,30 +1033,32 @@ Any Unit Test classes should be written to match the name of the class that the 
 | UserProfilePresenter | UserProfilePresenterTest |
 | PreferencesHelper    | PreferencesHelperTest    |
 
-All Test methods should be annotated with the `@Test` annotation, the methods should be named using the following template:
+所有的测试方法都应该使用`@Test`注释，方法命名应该遵循这个示例：
 
+```java
+@Test
+public void methodNamePreconditionExpectedResult() { }
+```
+根据示例，我们想检查signUp()方法在无效的email地址时的效果，这个测试方法应该是：
 
-    @Test
-    public void methodNamePreconditionExpectedResult() { }
-
-So for example, if we want to check that the signUp() method with an invalid email address fails, the test would look like:
-
-
+```java
     @Test
     public void signUpWithInvalidEmailFails() { }
+```
 
-Tests should focus on testing only what the method name entitles, if there’s extra conditions being tested in your Test method then this should be moved to it’s own individual test.
+测试应该只测试方法名赋予的测试，如果想添加额外的测试，应该创建新的单元测试。
 
-If a class we are testing contains many different methods, then the tests should be split across multiple test classes - this helps to keep the tests more maintainable and easier to locate. For example, a DatabaseHelper class may need to be split into multiple test classes such as :
+如果我们当前测试类包含许多不同的方法，那么这个测试类应该分割成多个测试类。这有助于保持测试更易于维护，更容易定位。比如，一个DatabaseHelper类应该分成多个测试类：
 
 
-    DatabaseHelperUserTest
-    DatabaseHelperPostsTest
-    DatabaseHelperDraftsTest
+```java
+DatabaseHelperUserTest
+DatabaseHelperPostsTest
+DatabaseHelperDraftsTest
+```
+### 2.4.2 Espresso测试
 
-### 2.4.2 Espresso tests
-
-Each Espresso test class generally targets an Activity, so the name given to it should match that of the targeted Activity, again followed by Test. For example:
+每个Espresso测试类一般针对一个Activity，所以它的名称应与目标Activity的相同，再接着测试。 例如：
 
 | Class                | Test Class               |
 |----------------------|--------------------------|
@@ -1064,11 +1066,11 @@ Each Espresso test class generally targets an Activity, so the name given to it 
 | ProfileActivity      | ProfileActivityTest      |
 | DraftsActivity       | DraftsActivityTest       |
 
-When using the Espresso API, methods should be chained on new lines to make the statements more readable, for example:
+当用Espresso API时，为了增加可读性链式方法每个方法都应该单独一行。示例：
 
-
-    onView(withId(R.id.text_title))
-            .perform(scrollTo())
-            .check(matches(isDisplayed()))
-
-Chaining calls in this style not only helps us stick to less than 100 characters per line but it also makes it easy to read the chain of events taking place in espresso tests.
+```java
+onView(withId(R.id.text_title))
+        .perform(scrollTo())
+        .check(matches(isDisplayed()))
+```
+这种风格不仅帮助我们坚持每行少于100个字符，而且也很容易地读取事件发生在那个Espresso测试链上。
