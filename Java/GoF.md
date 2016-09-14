@@ -558,36 +558,588 @@ public class Client {
 
 #### 观察者模式 Observer
 
+观察者模式定义了一种一对多的依赖关系，让多个观察者对象同时监听某一个对象。这个对象在状态上发生变化时，会通知所有观察者对象，让它们能够自动更新自己。  观察者与被观察者之间是属于轻度的关联关系，并且是抽象耦合的，这样，对于两者来说都比较容易进行扩展。
+
 ![Observer](GoF/Observer_main.png)
+
+```java
+abstract class Subject {
+    private Vector<Observer> obs = new Vector<Observer>();
+
+    public void addObserver(Observer obs){
+        this.obs.add(obs);
+    }
+    public void delObserver(Observer obs){
+        this.obs.remove(obs);
+    }
+    protected void notifyObserver(){
+        for(Observer o: obs){
+            o.update();
+        }
+    }
+    public abstract void doSomething();
+}
+
+class ConcreteSubject extends Subject {
+    public void doSomething(){
+        System.out.println("被观察者事件反生");
+        this.notifyObserver();
+    }
+}
+interface Observer {
+    public void update();
+}
+class ConcreteObserver1 implements Observer {
+    public void update() {
+        System.out.println("观察者1收到信息，并进行处理。");
+    }
+}
+class ConcreteObserver2 implements Observer {
+    public void update() {
+        System.out.println("观察者2收到信息，并进行处理。");
+    }
+}
+
+public class Client {
+    public static void main(String[] args){
+        Subject sub = new ConcreteSubject();
+        sub.addObserver(new ConcreteObserver1()); //添加观察者1
+        sub.addObserver(new ConcreteObserver2()); //添加观察者2
+        sub.doSomething();
+    }
+}
+```
+可以看出，我们只调用了Subject的方法，但同时两个观察者的相关方法都被同时调用了。仔细看一下代码，就是在Subject类中关联一下Observer类，并且在doSomething方法中遍历一下Observer的update方法就行了。
+
+ java语言中，有一个接口Observer，以及它的实现类Observable，对观察者角色常进行了实现。我们可以在jdk的api文档具体查看这两个类的使用方法。
 
 #### 中介者模式 Mediator
 
+中介者模式又称为**调停者模式**,用一个中介者对象封装一系列的对象交互，中介者使各对象不需要显示地相互作用，从而使耦合松散，而且可以独立地改变它们之间的交互。
+
 ![Mediator](GoF/Mediator_main.png)
+
+```java
+abstract class AbstractColleague {
+    int number;
+
+    int getNumber() {
+        return number;
+    }
+
+    void setNumber(int number){
+        this.number = number;
+    }
+
+    public abstract void setNumber(int number, AbstractMediator am);
+}
+
+class ColleagueA extends AbstractColleague{
+    @Override
+    public void setNumber(int number, AbstractMediator am) {
+        this.number = number;
+        am.AaffectB();
+    }
+}
+
+class ColleagueB extends AbstractColleague{
+
+    @Override
+    public void setNumber(int number, AbstractMediator am) {
+        this.number = number;
+        am.BaffectA();
+    }
+}
+
+abstract class AbstractMediator {
+    AbstractColleague A;
+    AbstractColleague B;
+
+    AbstractMediator(AbstractColleague a, AbstractColleague b) {
+        A = a;
+        B = b;
+    }
+
+    public abstract void AaffectB();
+
+    public abstract void BaffectA();
+
+}
+class Mediator extends AbstractMediator {
+
+    Mediator(AbstractColleague a, AbstractColleague b) {
+        super(a, b);
+    }
+
+    //处理A对B的影响
+    public void AaffectB() {
+        int number = A.getNumber();
+        B.setNumber(number*100);
+    }
+
+    //处理B对A的影响
+    public void BaffectA() {
+        int number = B.getNumber();
+        A.setNumber(number/100);
+    }
+}
+
+public class Client {
+    public static void main(String[] args){
+        AbstractColleague collA = new ColleagueA();
+        AbstractColleague collB = new ColleagueB();
+
+        AbstractMediator am = new Mediator(collA, collB);
+
+        System.out.println("==========通过设置A影响B==========");
+        collA.setNumber(1000, am);
+        System.out.println("collA的number值为："+collA.getNumber());
+        System.out.println("collB的number值为A的10倍："+collB.getNumber());
+
+        System.out.println("==========通过设置B影响A==========");
+        collB.setNumber(1000, am);
+        System.out.println("collB的number值为："+collB.getNumber());
+        System.out.println("collA的number值为B的0.1倍："+collA.getNumber());
+
+    }
+}
+```
+这段代码其实就是把原来处理对象关系的代码重新封装到一个中介类中，通过这个中介类来处理对象间的关系。
+
+**特点**：
+1. 适当地使用中介者模式可以避免同事类之间的过度耦合，使得各同事类之间可以相对独立地使用。
+2. 使用中介者模式可以将对象间一对多的关联转变为一对一的关联，使对象间的关系易于理解和维护。
+3. 使用中介者模式可以将对象的行为和协作进行抽象，能够比较灵活的处理对象间的相互作用。
 
 #### 访问者模式 Visitor
 
+封装某些作用于某种数据结构中各元素的操作，它可以在不改变数据结构的前提下定义作用于这些元素的新的操作。 访问者模式可能是行为类模式中最复杂的一种模式。
+
 ![Visitor](GoF/Visitor_main.png)
+
+```java
+abstract class Element {
+    public abstract void accept(Visitor visitor);
+    public abstract void doSomething();
+}
+
+abstract class Visitor {
+    abstract void visit(ConcreteElement1 el1);
+    abstract void visit(ConcreteElement2 el2);
+}
+
+class ConcreteElement1 extends Element {
+    public void doSomething(){
+        System.out.println("这是元素1");
+    }
+
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+}
+
+class ConcreteElement2 extends Element {
+    public void doSomething(){
+        System.out.println("这是元素2");
+    }
+
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+}
+class ConcreteVisitor extends Visitor {
+
+    public void visit(ConcreteElement1 el1) {
+        el1.doSomething();
+    }
+
+    public void visit(ConcreteElement2 el2) {
+        el2.doSomething();
+    }
+}
+
+class ObjectStruture {
+    public static List<Element> getList() {
+        List<Element> list = new ArrayList<Element>();
+        Random ran = new Random();
+        for(int i = 0; i < 10; i++){
+            int a = ran.nextInt(100);
+            if(a > 50) {
+                list.add(new ConcreteElement1());
+            } else {
+                list.add(new ConcreteElement2());
+            }
+        }
+        return list;
+    }
+}
+
+public class Client {
+    public static void main(String[] args){
+        List<Element> list = ObjectStruture.getList();
+        for(Element e: list){
+            e.accept(new ConcreteVisitor());
+        }
+    }
+}
+```
+方便理解可以简化为
+
+```java
+class Element {
+    public void doSomething(){
+        System.out.println("我是元素");
+    }
+
+    public void accept(Visitor visitor){
+        visitor.visit(this);
+    }
+}
+
+class Visitor {
+    public void visit(Element el){
+        el.doSomething();
+    }
+}
+public class Client {
+    public static void main(String[] args){
+        Element el = new Element();
+        el.accept(new Visitor());
+    }
+}  
+```
+
+
+**特点**
+1. 符合单一职责原则：元素类中封装在访问者中的操作必定是与元素类本身关系不大且是易变的操作。被封装的操作通常都是易变的，当发生变化时，在不改变元素类本身的前提下，实现对变化部分的扩展。
+2. 扩展性良好：元素类可以通过接受不同的访问者来实现对不同操作的扩展。
 
 #### 备忘录模式 Memento
 
+在不破坏封装性的前提下，捕获一个对象的内部状态，并在该对象之外保存这个状态。这样就可以将该对象恢复到原先保存的状态。
+
 ![Memento](GoF/Memento_main.png)
+
+**特点**：
+1. 当发起人角色中的状态改变时，为对象保存一个备份，当改变是错误时，就可以恢复对象。
+2. 备份的状态是保存在发起人角色之外的，发起人角色就不需要对各个备份的状态进行管理。
 
 #### 状态模式 State
 
+当一个对象的内在状态改变时允许改变其行为，这个对象看起来像是改变了其类。当一个对象的行为取决于它的状态，并且它必须在运行时刻根据状态改变它的行为时，就可以考虑使用状态模式来。
+
 ![State](GoF/State_main.png)
 
-#### 策略模式 Strategy
+```java
+abstract class State {
+    public abstract void Handle(Context context);
+}
 
-![Strategy](GoF/Strategy_main.png)
+class Context {
+    private State state;
+
+    public Context(State state) {
+        this.state = state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public void Request() {
+        state.Handle(this);
+    }
+}
+
+class ConcreteStateA extends State {
+    @Override
+    public  void Handle(Context context) {
+        System.out.println("当前状态是 A.");
+        context.setState(new ConcreteStateB());
+    }
+}
+
+class ConcreteStateB extends State {
+    @Override
+    public  void Handle(Context context) {
+        System.out.println("当前状态是 B.");
+        context.setState(new ConcreteStateA());
+    }
+}
+
+public class Client{
+    public static void main(String args[]){
+        Context context = new Context(new ConcreteStateA());
+        context.Request();
+        context.Request();
+        context.Request();
+        context.Request();
+    }
+}
+```
+
+**特点**：
+1. 状态模式将与特定状态相关的行为局部化，并且将不同状态的行为分割开来。
+2. 所有状态相关的代码都存在于某个ConcereteState中，所以通过定义新的子类很容易地增加新的状态和转换。
+3. 状态模式通过把各种状态转移逻辑分不到State的子类之间，来减少相互间的依赖。
 
 #### 模版方法模式 Template Method
 
+定义一个操作中的算法的骨架，而将步骤延迟到子类中。模板方法使得子类可以不改变一个算法的结构即可重定义算法的某些特定步骤。
+
 ![Template Method](GoF/TemplateMethod_main.png)
+
+```java
+abstract class AbstractClass{
+    abstract void PrimitiveOperation1();
+    abstract void PrimitiveOperation2();
+
+    public void TemplateMethod() {
+        PrimitiveOperation1();
+        PrimitiveOperation2();
+        System.out.println("方法完成");
+    }
+}
+
+class ConcreteClassA extends AbstractClass{
+    @Override
+    public void PrimitiveOperation1() {
+        System.out.println("ConcreteClassA中实现Operation1");
+    }
+
+    @Override
+    public void PrimitiveOperation2() {
+        System.out.println("ConcreteClassA中实现Operation2");
+    }
+}
+
+class ConcreteClassB extends AbstractClass{
+    @Override
+    public void PrimitiveOperation1() {
+        System.out.println("ConcreteClassB中实现Operation1");
+    }
+
+    @Override
+    public void PrimitiveOperation2() {
+        System.out.println("ConcreteClassB中实现Operation2");
+    }
+}
+
+public class Client{
+    public static void main(String args[]){
+        AbstractClass c;
+
+        // 用ConcreteClassA实例化c
+        c = new ConcreteClassA();
+        c.TemplateMethod();
+
+        // 用ConcreteClassB实例化c
+        c = new ConcreteClassB();
+        c.TemplateMethod();
+    }
+}
+```
+
+**特点**：
+1. 模板方法模式通过把不变的行为搬移到超类，去除了子类中的重复代码。
+2. 子类实现算法的某些细节，有助于算法的扩展。（但是不同的实现都需要定义一个子类，这会导致类的个数的增加，设计更加抽象）
+3. 通过一个父类调用子类实现的操作，通过子类扩展增加新的行为，符合“开放-封闭”原则。
+
+#### 策略模式 Strategy
+
+定义一组算法，将每个算法都封装起来，并且使他们之间可以互换。策略模式是对算法的封装，把一系列的算法分别封装到对应的类中，并且这些类实现相同的接口，相互之间可以替换。策略模式与模版方法模式的区别仅仅是多了一个单独的封装类Context。
+
+![Strategy](GoF/Strategy_main.png)
+
+```java
+interface Strategy {
+    void doSomething();
+}
+class ConcreteStrategy implements Strategy {
+    public void doSomething() {
+        System.out.println("具体策略1");
+    }
+}
+class Context {
+    private Strategy strategy;
+
+    public Context(Strategy strategy){
+        this.strategy = strategy;
+    }
+
+    public void execute(){
+        strategy.doSomething();
+    }
+}
+
+public class Client {
+    public static void main(String[] args){
+        Context context;
+        System.out.println("-----执行策略-----");
+        context = new Context(new ConcreteStrategy());
+        context.execute();
+    }
+}
+```
+
+**特点**：
+1. 策略类之间可以自由切换，由于策略类实现自同一个抽象，所以他们之间可以自由切换。
+2. 易于扩展，增加一个新的策略对策略模式来说非常容易，基本上可以在不改变原有代码的基础上进行扩展。
+3. 避免使用多重条件，如果不使用策略模式，所有的算法必须使用条件语句进行连接，通过条件判断来决定使用哪一种算法。
 
 #### 命令模式 Command
 
+将一个请求封装成一个对象，从而让你使用不同的请求把客户端参数化，对请求排队或者记录请求日志，可以提供命令的撤销和恢复功能。命令模式就是对命令的封装。
+
 ![Command](GoF/Command_main.png)
+
+```java
+abstract class Command {
+    public abstract void execute();
+}
+
+class Receiver {
+    void doSomething(){
+        System.out.println("接受者-业务逻辑处理");
+    }
+}
+
+class Invoker {
+    private Command command;
+    void setCommand(Command command) {
+        this.command = command;
+    }
+    void action(){
+        this.command.execute();
+    }
+}
+
+class ConcreteCommand extends Command {
+    private Receiver receiver;
+    ConcreteCommand(Receiver receiver){
+        this.receiver = receiver;
+    }
+    public void execute() {
+        this.receiver.doSomething();
+    }
+}
+
+
+public class Client {
+    public static void main(String[] args){
+        Receiver receiver = new Receiver();
+        Command command = new ConcreteCommand(receiver);
+        //客户端直接执行具体命令方式（此方式与类图相符）
+        command.execute();
+
+        //客户端通过调用者来执行命令
+        Invoker invoker = new Invoker();
+        invoker.setCommand(command);
+        invoker.action();
+    }
+}
+```
+**特点**：
+1. 命令模式的封装性很好，客户端来需要什么功能就去调用相应的命令，无需知道命令具体是怎么执行的。（无论命令多简单，都需要一个命令类来封装，比较繁琐）
+2. 命令模式的扩展性很好。比如，文件的操作中，我们需要增加一个剪切文件的命令，则只需要把复制文件和删除文件这两个命令组合一下就行了，非常方便。
 
 #### 职责链模式 Chain of Responsibility
 
+使多个对象都有机会处理请求，从而避免了请求的发送者和接收者之间的耦合关系。将这些对象连成一条链，并沿着这条链传递该请求，直到有对象处理它为止。
+责任链模式与if…else…相比，他的耦合性要低一些，因为它把条件判定都分散到了各个处理类中，并且这些处理类的优先处理顺序可以随意设定。责任链模式也有缺点，这与if…else…语句的缺点是一样的，那就是在找到正确的处理类之前，所有的判定条件都要被执行一遍，当责任链比较长时，性能问题比较严重。
+
 ![Chain of Responsibility](GoF/ChainOfResponsibility_main.png)
+
+```java
+class Level {
+    private int level = 0;
+    Level(int level){
+        this.level = level;
+    }
+
+    boolean above(Level level){
+        return this.level >= level.level;
+    }
+}
+
+class Request {
+    private Level level;
+    Request(Level level){
+        this.level = level;
+    }
+
+    Level getLevel(){
+        return level;
+    }
+}
+
+class Response {
+
+}
+
+abstract class Handler {
+    private Handler nextHandler;
+    final Response handleRequest(Request request){
+        Response response = null;
+
+        if(this.getHandlerLevel().above(request.getLevel())){
+            response = this.response(request);
+        }else{
+            if(this.nextHandler != null){
+                this.nextHandler.handleRequest(request);
+            }else{
+                System.out.println("-----没有合适的处理器-----");
+            }
+        }
+        return response;
+    }
+    void setNextHandler(Handler handler){
+        this.nextHandler = handler;
+    }
+    protected abstract Level getHandlerLevel();
+    public abstract Response response(Request request);
+}
+
+class ConcreteHandler1 extends Handler {
+    protected Level getHandlerLevel() {
+        return new Level(1);
+    }
+    public Response response(Request request) {
+        System.out.println("-----请求由处理器1进行处理-----");
+        return null;
+    }
+}
+
+class ConcreteHandler2 extends Handler {
+    protected Level getHandlerLevel() {
+        return new Level(3);
+    }
+    public Response response(Request request) {
+        System.out.println("-----请求由处理器2进行处理-----");
+        return null;
+    }
+}
+
+class ConcreteHandler3 extends Handler {
+    protected Level getHandlerLevel() {
+        return new Level(5);
+    }
+    public Response response(Request request) {
+        System.out.println("-----请求由处理器3进行处理-----");
+        return null;
+    }
+}
+
+public class Client {
+    public static void main(String[] args){
+        Handler handler1 = new ConcreteHandler1();
+        Handler handler2 = new ConcreteHandler2();
+        Handler handler3 = new ConcreteHandler3();
+
+        handler1.setNextHandler(handler2);
+        handler2.setNextHandler(handler3);
+
+        Response response = handler1.handleRequest(new Request(new Level(4)));
+    }
+}
+```
