@@ -151,11 +151,139 @@ NULL比较特殊，NULL使用 `~` 来表示
 # 注意区分 ~ 和 `
 isSet: ~
 ```
-###### 字符串
 
+###### 时间
+时间采用 ISO8601 格式。
 ```yml
-
+iso8601: 2001-12-14t21:59:43.10-05:00
+```
+JavaScript
+```js
+{ iso8601: new Date('2001-12-14t21:59:43.10-05:00') }
 ```
 
-* 时间
-* 日期
+###### 日期
+日期采用复合 iso8601 格式的年、月、日表示。
+```yml
+date: 1976-07-31
+```
+JavaScript
+```js
+{ date: new Date('1976-07-31') }
+```
+
+###### 字符串
+
+字符串默认不使用引号表示。
+
+```yml
+str: 这是一行字符串
+```
+如果字符串之中包含空格或特殊字符，需要放在引号之中。
+```yml
+str: '内容： 字符串'
+```
+单引号和双引号都可以使用，双引号不会对特殊字符转义。
+```yml
+s1: '内容\n字符串'
+s2: "内容\n字符串"
+```
+JavaScript
+```js
+{
+    s1: '内容\\n字符串',
+    s2: '内容\n字符串'
+}
+```
+单引号之中如果还有单引号，必须连续使用两个单引号转义。
+```yml
+str: 'labor''s day'
+```
+JavaScript
+```js
+{ str: 'labor\'s day' }
+```
+字符串可以写成多行，从第二行开始，必须有一个单空格缩进。换行符会被转为空格。
+```yml
+str: 这是一段
+ 多行
+ 字符串
+```
+JavaScript
+```js
+{ str: '这是一段 多行 字符串' }
+```
+多行字符串可以使用|保留换行符，也可以使用>折叠换行。
+```yml
+this: |
+  Foo
+  Bar
+that: >
+  Foo
+  Bar
+```
+
+JavaScript
+```js
+{ this: 'Foo\nBar\n', that: 'Foo Bar\n' }
+```
+
+`+` 表示保留文字块末尾的换行，`-` 表示删除字符串末尾的换行。
+
+```yml
+s1: |
+  Foo
+s2: |+
+  Foo
+s3: |-
+  Foo
+```
+
+JavaScript
+```js
+{ s1: 'Foo\n', s2: 'Foo\n\n\n', s3: 'Foo' }
+```
+
+字符串之中可以插入 HTML 标记。
+```yml
+message: |
+  <p style="color: red">
+    段落
+  </p>
+```
+JavaScript
+```js
+{ message: '\n<p style="color: red">\n  段落\n</p>\n' }
+```
+
+###### 类型转换
+
+YAML 允许使用两个感叹号，强制转换数据类型。
+
+```yml
+e: !!str 123
+f: !!str true
+```
+
+JavaScript
+```js
+{ e: '123', f: 'true' }
+```
+
+###### 引用
+
+锚点 `& `和别名 `*`，可以用来引用。
+
+```yml
+defaults: &defaults
+  adapter:  postgres
+  host:     localhost
+
+development:
+  database: myapp_development
+  <<: *defaults
+
+test:
+  database: myapp_test
+  <<: *defaults
+```
