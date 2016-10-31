@@ -312,7 +312,7 @@ JavaScript
 { e: '123', f: 'true' }
 ```
 
-### 引用
+## 引用
 
 锚点 `&`和别名 `*`，可以用来引用。
 
@@ -328,4 +328,40 @@ development:
 test:
   database: myapp_test
   <<: *defaults
+```
+
+等同于：
+
+```yml
+defaults:
+  adapter:  postgres
+  host:     localhost
+
+development:
+  database: myapp_development
+  adapter:  postgres
+  host:     localhost
+
+test:
+  database: myapp_test
+  adapter:  postgres
+  host:     localhost
+```
+
+`&` 用来建立锚点（defaults），`<<` 表示合并到当前数据，`*` 用来引用锚点。
+
+其他例子：
+
+```yml
+- &anchor Steve
+- Clark
+- Brian
+- Oren
+- *anchor
+```
+
+JavaScript
+
+```js
+[ 'Steve', 'Clark', 'Brian', 'Oren', 'Steve' ]
 ```
