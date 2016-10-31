@@ -1,10 +1,11 @@
 ---
 title: Activity动画
 tag:
-    - Activity
+  - Activity
 ---
 
 # Activity Transition
+
 Activity Transition是Material Design中提供的一种动画效果。它通过运动和切换不同状态之间的元素来产生各种动画效果。
 
 **主要步骤**
@@ -14,14 +15,13 @@ Activity Transition是Material Design中提供的一种动画效果。它通过�
 3. 在Activity中代码实现上面两步（手动实现配置文件的效果）
 4. 启动Activity
 
-
-##### 在Style主题中启用Activity Transition。
+## 在Style主题中启用Activity Transition。
 
 style.xml中添加如下属性
 
 ```xml
 <!-- 允许使用transitions  必要* -->  
-<item name="android:windowContentTransitions">true</item>  
+<item name="android:windowContentTransitions">true</item>
 ```
 
 为Activity进入和推出指定transitions样式
@@ -39,13 +39,12 @@ style.xml中添加如下属性
 <item name="android:windowSharedElementEnterTransition">  
     @transition/change_image_transform</item>  
 <item name="android:windowSharedElementExitTransition">  
-    @transition/change_image_transform</item>  
+    @transition/change_image_transform</item>
 ```
 
-##### 定义Transition特效样式
+## 定义Transition特效样式
 
-根据需求在@transition目录下创建样式文件 如上面change_image_transform和explode
-常用的Transition特效
+根据需求在@transition目录下创建样式文件 如上面change_image_transform和explode 常用的Transition特效
 
 ```xml
 <transitionSet xmlns:android="http://schemas.android.com/apk/res/android">
@@ -58,10 +57,10 @@ style.xml中添加如下属性
     <changeTransform/>   // 裁剪目标视图边界
     <changeClipBounds/>  // 改变目标视图的缩放比例和旋转角度
     <changeImageTransform/>   // 改变目标图片的大小和缩放比例
-</transitionSet>  
+</transitionSet>
 ```
 
-##### 在Activity中代码实现
+## 在Activity中代码实现
 
 手动在Activity用代码实现配置文件的效果
 
@@ -74,17 +73,16 @@ getWindow().setExitTransition(new Explode());
 
 //设置一个进入 transition
 getWindow().setEnterTransition(new Fade());
-
 ```
 
-##### 启动Activity
+## 启动Activity
 
 当你已经设置了允许使用Transition并设置了Transition动画，你就可以通过ActivityOptions.makeSceneTransitionAnimation()方法启动一个新的Activity来激活这个Transition
 
 **启动普通的Transition**
 
 ```java
-startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(this).toBundle());  
+startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
 ```
 
 **启用共享元素Transition**
@@ -99,12 +97,13 @@ ActivityOptions options =
     ActivityOptions.makeSceneTransitionAnimation(this,shareView,"shareName");
 startActivity(intent, options.toBundle());
 ```
+
 如果有多个View需要共享，则通过Pair.create()方法创建多个匹配对然后传入ActivityOptions.makeSceneTransitionAnimation。
+
 ```java
 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this,  
            Pair.create(view1, "agreedName1"),  
-           Pair.create(view2, "agreedName2"));  
+           Pair.create(view2, "agreedName2"));
 ```
 
-如果不想使用transition可以设置options bundle为null。
-当需要结束当前Activity并回退这个动画时调用Activity.finishAfterTransition()方法
+如果不想使用transition可以设置options bundle为null。 当需要结束当前Activity并回退这个动画时调用Activity.finishAfterTransition()方法
