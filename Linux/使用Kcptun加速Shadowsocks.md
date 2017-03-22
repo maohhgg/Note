@@ -65,7 +65,8 @@ nano /etc/shadowsocks.json
     "method":"aes-256-cfb",
 }
 ```
-每个端口有一个密码，配置项由`password`改为`port_password`
+每个端口有一个密码，配置项由`password`改为`port_password`。
+**注意，当开启使用多用户时，`server`项的值必须为`0.0.0.0`，否则不能启动多个端口**
 
 #### 启动或关闭Shadowsocks服务
 启动
