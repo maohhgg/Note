@@ -1,6 +1,7 @@
 ---
 title: Linux 笔记
 date: 2017/5/31
+update: 2017/6/7
 tag:
   - Linux
 ---
@@ -66,17 +67,18 @@ product: SurfTab twin 11.6
 - [x] Wifi : rtl8723bs
     > github 有开源驱动 [https://github.com/hadess/rtl8723bs.git](https://github.com/hadess/rtl8723bs.git)， 现在已经加入在 kernel 4.12-rc1中了。可直接更新内核和更新linux-firmware，直接驱动。
 - [x] Battery 
-- [x] Bluetooth 
+- [x] Bluetooth   
 
-设备暂时没法使用
+
+暂时没法使用
 
 - [ ] Audio : RealTek ALC5642
-    > 内核中无驱动， 在kernel 4.12-rc1开始将没法识别的定义为 `bytcht_nocodec`[http://elixir.free-electrons.com/linux/v4.12-rc1/source/sound/soc/intel/atom/sst/sst_acpi.c#L520](http://elixir.free-electrons.com/linux/v4.12-rc1/source/sound/soc/intel/atom/sst/sst_acpi.c#L520)，这样不能被驱动，打上[https://github.com/plbossart/UCM](https://github.com/plbossart/UCM)中的`bytcht_nocodec`能够驱动，但是配置不对。导出DSDT，使用iasl转换为刻度模式。
+    > 内核中无驱动， 在kernel 4.12-rc1开始将没法识别的定义为 `bytcht_nocodec`[http://elixir.free-electrons.com/linux/v4.12-rc1/source/sound/soc/intel/atom/sst/sst_acpi.c#L520](http://elixir.free-electrons.com/linux/v4.12-rc1/source/sound/soc/intel/atom/sst/sst_acpi.c#L520)，这样不能被驱动，打上[https://github.com/plbossart/UCM](https://github.com/plbossart/UCM)中的`bytcht_nocodec`能够驱动，但是配置不对。导出DSDT，使用iasl转换为可读模式。
     ```
       Name (_HID, "10EC5640" /* Realtek I2S Audio Codec */)  // _HID: Hardware ID
                 Name (_CID, "10EC5640" /* Realtek I2S Audio Codec */)  // _CID: Compatible ID
                 Name (_DDN, "ALC5642")  // _DDN: DOS Device Name
     ```
-    根据CID可知 ALC5642 和 ALC5640 基本一样，这里需要在kernel源码中加上一行`{"10EC5640", "bytcr_rt5642", "intel/fw_sst_22a8.bin", "bytcr_rt5642", cht_quirk, &chv_platform_data },`，并重新编译打包。（留着有空再做）
+    根据CID可知 ALC5642 和 ALC5640 基本一样，这里需要在kernel `sound/soc/intel/atom/sst/sst_acpi.c` 源码中加上一行`{"10EC5640", "bytcht_rt5642", "intel/fw_sst_22a8.bin", "bytcht_rt5642", NULL, &chv_platform_data },`，并重新编译打包。（留着有空再做）
 - [ ] Touch screen 
 - [ ] GPS
