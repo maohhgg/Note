@@ -72,13 +72,17 @@ product: SurfTab twin 11.6
 
 暂时没法使用
 
-- [ ] Audio : RealTek ALC5642
-    > 内核中无驱动， 在kernel 4.12-rc1开始将没法识别的定义为 `bytcht_nocodec`[http://elixir.free-electrons.com/linux/v4.12-rc1/source/sound/soc/intel/atom/sst/sst_acpi.c#L520](http://elixir.free-electrons.com/linux/v4.12-rc1/source/sound/soc/intel/atom/sst/sst_acpi.c#L520)，这样不能被驱动，打上[https://github.com/plbossart/UCM](https://github.com/plbossart/UCM)中的`bytcht_nocodec`能够驱动，但是配置不对。导出DSDT，使用iasl转换为可读模式。
+- [ ] <del>Audio : RealTek ALC5642</del>
+    > <del>内核中无驱动， 在kernel 4.12-rc1开始将没法识别的定义为 `bytcht_nocodec`[http://elixir.free-electrons.com/linux/v4.12-rc1/source/sound/soc/intel/atom/sst/sst_acpi.c#L520](http://elixir.free-electrons.com/linux/v4.12-rc1/source/sound/soc/intel/atom/sst/sst_acpi.c#L520)，这样不能被驱动，打上[https://github.com/plbossart/UCM](https://github.com/plbossart/UCM)中的`bytcht_nocodec`能够驱动，但是配置不对。导出DSDT，使用iasl转换为可读模式。
     ```
       Name (_HID, "10EC5640" /* Realtek I2S Audio Codec */)  // _HID: Hardware ID
                 Name (_CID, "10EC5640" /* Realtek I2S Audio Codec */)  // _CID: Compatible ID
                 Name (_DDN, "ALC5642")  // _DDN: DOS Device Name
     ```
-    根据CID可知 ALC5642 和 ALC5640 基本一样，这里需要在kernel `sound/soc/intel/atom/sst/sst_acpi.c` 源码中加上一行`{"10EC5640", "bytcht_rt5642", "intel/fw_sst_22a8.bin", "bytcht_rt5642", NULL, &chv_platform_data },`，并重新编译打包。（留着有空再做）
-- [ ] Touch screen 
-- [ ] GPS
+    根据CID可知 ALC5642 和 ALC5640 基本一样，这里需要在kernel `sound/soc/intel/atom/sst/sst_acpi.c` 源码中加上一行`{"10EC5640", "bytcht_rt5642", "intel/fw_sst_22a8.bin", "bytcht_rt5642", NULL, &chv_platform_data },`，并重新编译打包。（留着有空再做）</dev>
+- [ ] Audio : RealTek ALC5651
+    > 最新kernel 4.12-rc4已经包含此驱动。（能识别硬件，但不能正常驱动，使用 [https://github.com/plbossart/UCM](https://github.com/plbossart/UCM) 能驱动硬件，配置错误，使用 `alsamixer` 命令手动配置能使耳机口正常，）
+- [ ] Touch screen: gslx680 - Resolution 1920x1080
+    > 按照 [https://github.com/onitake/gslx680-acpi](https://github.com/onitake/gslx680-acpi) 将驱动模块引入内核， 使用 [https://github.com/onitake/gsl-firmware](https://github.com/onitake/gsl-firmware)  `fwtool` 工具配置好分辨率
+
+
