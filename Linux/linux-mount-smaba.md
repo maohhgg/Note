@@ -3,6 +3,7 @@ title: Linux挂载smaba目录
 date: 2017/5/30
 tag:
   - Android
+urlname: Linux-mount-smaba
 ---
 
 

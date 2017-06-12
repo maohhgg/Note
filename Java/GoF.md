@@ -5,6 +5,7 @@ update: '2016/9/14 2:25:12'
 tag:
   - java
   - 设计模式
+urlname: design-patterns-proposed-by-gof
 ---
 
 # 创建型模式

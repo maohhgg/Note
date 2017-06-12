@@ -4,6 +4,7 @@ date: 2016/10/29
 tag:
   - YAML
   - 标记语言
+urlname: YAML-language
 ---
 
 编程中经常会写配置文件，本人比较喜欢使用 JSON，在我以往使用的语言都对 JSON 有良好的支持。 当我使用 [Hexo](https://hexo.io/) 来构建这个博客时， 配置 Hexo 时发现她使用了 YAML 来编写配置文件。google之，发现 YAML 包含了 JSON 的优点（部分吧），还能存储复杂的数据结构。

@@ -3,6 +3,7 @@ title: console
 date: 2016/10/29
 tag:
   - javascrpit
+urlname: using-chrome-conlose
 ---
 
 # console显示信息

@@ -3,6 +3,7 @@ title: Java 反射机制
 date: '2016/10/8 22:22:54'
 tag:
   - java
+urlname: using-Java-Reflection
 ---
 
 # Java的反射
