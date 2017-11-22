@@ -6,10 +6,9 @@ tag:
 urlname: Linux-mount-smaba
 ---
 
-
-### 使用mount挂载
-
 本地Linux版本是elementary OS 0.4.1 Loki，是基于 "Ubuntu 16.04.2 LTS" 构建的Linux发行版，相当于Ubuntu 16.04。
+<!--more-->
+### 使用mount挂载
 
 先要安装cifs-utils
 ```shell

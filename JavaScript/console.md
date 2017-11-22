@@ -6,10 +6,10 @@ tag:
 urlname: using-chrome-conlose
 ---
 
-# console显示信息
+
 
 本文使用 Chrome 浏览器中 Developer Tools来演示各种效果
-
+<!--more-->
 ## 显示信息
 
 console 提供了不同级别的消息显示方法

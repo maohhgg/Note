@@ -11,7 +11,7 @@ urlname: use-Kcptun-to-speed-up-Shadowsocks
 
 偶然间读到一篇关于Google BBR拥塞算法，他是一个TCP加速优化工具，用于优化 TCP 连接，听说最近挺火的。有不少人用来优化Shadowsocks的TCP连接，翻墙的速度翻了倍。`（聪明的你发现了这个标题不符啊，这个下面来详述。）`这使我燃起了购买海外VPS的欲望，遂买了搬瓦工[https://bandwagonhost.com/](https://bandwagonhost.com/)一年的VPS`（他家支持支付宝，运气好的话还可以买到3.99$/year。）`。
 
-
+<!--more-->
 ### Shadowsocks
 
 在安装好系统后，`（我这安装的是Ubuntu16.04，搬瓦工默认是centOS6）` 搬瓦工贴心的给你设置了不好记的密码，常用服务端口号也改成了不常用的了，所以我修改Root密码，更改了SSH端口号，方便自己。

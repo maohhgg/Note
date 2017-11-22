@@ -6,7 +6,7 @@ tag:
 urlname: ActionBar-Scroll-display
 ---
 
-# ActionBar跟随滚动显示
+
 
 隐藏ActionBar的方法有很多，可以通过代码的方式隐藏，也可以通过配置文件的方式，本片介绍简单的方式**通过配置文件**
 
@@ -17,7 +17,7 @@ urlname: ActionBar-Scroll-display
 在我们的项目使用`CoordinatorLayout`来同步滚动ActionBar和内容View。
 
 使用`CoordinatorLayout`作为主要布局。需要关闭Theme自带的ActionBar，可以新建style建立新主题并加入
-
+<!--more-->
 ```xml
 <item name="windowActionBar">false</item>
 <item name="windowNoTitle">true</item>

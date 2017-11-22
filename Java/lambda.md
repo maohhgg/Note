@@ -7,7 +7,7 @@ urlname: Lambda
 ---
 
 Lambda表达式是java8给我们带来的几个重量级新特性之一，借用Lambda表达式，可以让我们的java程序设计更加简洁。Android Studio也会使用lambda表达式来缩略展示代码，本文将简略介绍Lambda表达式。
-
+<!--more-->
 # Lambda 表达式简介
 
 Lambda 表达式是一种匿名函数(对Java而言这并不完全正确，但现在姑且这么认为)，简单地说，它是没有声明的方法，也即没有访问修饰符、返回值声明和名字。

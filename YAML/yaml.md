@@ -11,6 +11,7 @@ urlname: YAML-language
 
 为什么没提 ini xml 来维护配置文件。编程从PHP开始，对xml支持不友好，解析xml比json麻烦得多。ini使用较少。
 
+<!--more-->
 # 简介
 
 YAML ： YAML Ain't Markup Language YAML 是专门用来写配置文件的语言。

@@ -1,13 +1,14 @@
 ---
-title: Elementary OS 0.4.1 loki 升级到 Ubuntu 18.4-dev 降级到 Ubuntu 17.10
+title: Ubuntu的降级和升级
 date: 2017/11/22
 tag:
   - Linux
 urlname: ubuntu-downgrade
+desc: Ubuntu 降级,Ubuntu downgrade,Ubuntu 升级
 ---
 
 最近看 Ubuntu 17.10 正式版上线了，就把我的寨板Cube iWrok 1x,升级到了Ubuntu 17.10，但是Ubuntu 17.10默认使用 wayland 的 gnome-shell 消耗了大量的系统资源。我的寨板使用的是Intel Atom x5-Z8350，对此已经力不从心了，不要说运行其他的。遂将 Gnome 替换成 KDE5 Plasma，配置完成后发现 KDE5.10 版本使用了 Arc theme 后符合我的直男审美。就像把我主力机使用的 Pantheon 替换成 KDE5。问题就来了。
-
+<!--more-->
 ### 不要抱着试一试的心态，想清楚了再干
 
 我的主力机使用的是基于 Ubuntu 16.04.2 LTS 的 Elementary OS，所以deb包管理的源列表使用的是Elementary OS和Ubuntu xenial。在Ubuntu xenial下KDE的最新版本为 [5.5.5](https://packages.ubuntu.com/xenial/plasma-desktop)，不是Ubuntu artful下的 [5.10.x](https://packages.ubuntu.com/artful/plasma-desktop)。

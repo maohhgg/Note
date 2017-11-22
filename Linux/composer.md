@@ -7,10 +7,11 @@ tag:
 urlname: composer
 ---
 
-##### 错误的出现
-
 今天在用Yii2写一个项目时，使用了[material-design-lite](https://getmdl.io)这个Material Design设计语言库，
 我的Yii2使用的是Composer安装的。所以我也想使用Composer配合npm来保持material-design-lite库的更新。
+<!--more-->
+
+##### 错误的出现
 
 在composer.json添加了
 ```
