@@ -1,7 +1,6 @@
 ---
 title: Elementary OS 0.4.1 loki 升级到 Ubuntu 18.4-dev 降级到 Ubuntu 17.10
-date: 2017/5/31
-update: 2017/11/22
+date: 2017/11/22
 tag:
   - Linux
 urlname: ubuntu-downgrade
