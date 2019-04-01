@@ -18,6 +18,8 @@ MySQL 5.7开放下载已经几年了，比 MySQL 5.6 快 3 倍，同时还提高
 
 还有一点就是在MySQL 5.6中最大索引长度为767字节，使用utf8mb4编码时，最多只有191个字符。而PHP 的 Laravel 5.4以后默认使用utf8mb4编码。MySQL 5.7增加到了3072字节。
 
+<!--more-->
+
 #### MySQL 安装
 
 ##### Ubuntu server
