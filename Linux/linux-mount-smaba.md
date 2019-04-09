@@ -3,7 +3,7 @@ title: Linux挂载smaba目录
 date: 2017/5/30
 tag:
   - Android
-urlname: Linux-mount-smaba
+urlname: linux-mount-smaba
 ---
 
 本地Linux版本是elementary OS 0.4.1 Loki，是基于 "Ubuntu 16.04.2 LTS" 构建的Linux发行版，相当于Ubuntu 16.04。

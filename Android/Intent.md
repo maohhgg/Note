@@ -3,7 +3,7 @@ title: Intent （Android笔记二）
 date: 2016/9/9
 tag:
   - Android
-urlname: Android-note-the-Intent
+urlname: android-note-the-intent
 ---
 
 # Android笔记

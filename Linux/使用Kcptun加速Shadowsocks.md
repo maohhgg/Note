@@ -4,7 +4,7 @@ date: 2017/3/7
 tag:
   - Linux
   - 翻墙
-urlname: use-Kcptun-to-speed-up-Shadowsocks
+urlname: use-kcptun-to-speed-up-shadowsocks
 ---
 
 最近终于忍受不了访问Google速度慢，搜索东西时url改变了，但还是停在Google首页！！！！，还有atom插件老奔溃，插件一奔溃就检查是否有更新。然而一更新半年都没反应。

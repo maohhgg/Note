@@ -1,12 +1,12 @@
 ---
-title: 手动搭建 TypesSript+React+Webpack+Ant Design of React
+title: 手动搭建 TypeScript+React+Webpack+Ant Design of React
 date: 2019/4/3
 tag:
   - TypeScript
   - React
   - Webpack
   - antd
-urlname: typescript_react_webpack_antd
+urlname: typescript-react-webpack-antd
 ---
 
 我们在创建React项目的时，大多都是通过create-react-app来直接npm到本地的已经搭建好的脚手架，直接使用就好了。但有时各种脚手架工具不能满足我们的需求时，这就需要自己手动搭建。今天我们就手动搭建TypesSript+React+Webpack+Ant Design of React。
@@ -118,9 +118,6 @@ module.exports = {
     // entry: "./src/index.tsx",  // 默认地址 不需要额外配置
     
     mode: 'development',
-
-    // 启用webpack的调试输出。
-    devtool: "source-map",
 
     resolve: {
         // 添加 '.ts' '.tsx' 作为可识别后缀

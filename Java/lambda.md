@@ -3,7 +3,7 @@ title: Lambda表达式简介
 date: '2016/10/7 22:22:54'
 tag:
   - java
-urlname: Lambda
+urlname: lambda
 ---
 
 Lambda表达式是java8给我们带来的几个重量级新特性之一，借用Lambda表达式，可以让我们的java程序设计更加简洁。Android Studio也会使用lambda表达式来缩略展示代码，本文将简略介绍Lambda表达式。

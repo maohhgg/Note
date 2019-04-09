@@ -4,7 +4,7 @@ date: 2017/5/31
 update: 2017/6/7
 tag:
   - Linux
-urlname: Linux-note
+urlname: linux-note
 ---
 
 

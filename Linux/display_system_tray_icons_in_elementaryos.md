@@ -3,7 +3,7 @@ title: ElementaryOS 5.0 Juno 显示托盘图标
 date: 2019/3/31
 tag:
   - Linux
-urlname: display_system_tray_icons_in_elementaryos
+urlname: display-system-tray-icons-in-elementaryos
 ---
 
 ElementaryOS当从Loki升级到Juno，会遇到第三方应用的系统托盘图标不显示的问题。因为在发行版Juno中，ElementaryOS 取消了对 Ayatana Indicators 的支持。

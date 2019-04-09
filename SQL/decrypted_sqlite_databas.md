@@ -3,7 +3,7 @@ title: Android 微信聊天记录导出
 date: 2018/3/29
 tag:
   - sqlite
-urlname: decrypted_sqlite_database
+urlname: decrypted-sqlite-database
 ---
 
 最近在写一个关于微信聊天记录统计和可视化的应用，我使用的Android操作系统，微信的所有的数据都以SQLite数据库的形式保存在手机的 `/data` 目录下。我只需复制文件就可以来读取所有需要的信息，注意Android系统的根目录需要root权限才能访问，如果没有root权限请先获取root权限。

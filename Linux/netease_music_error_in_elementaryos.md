@@ -3,7 +3,7 @@ title: 网易云音乐需要管理员权限运行及Pantheon无法弹出托盘�
 date: 2019/4/01
 tag:
   - Linux
-urlname: netease_music_error_in_elementaryos
+urlname: netease-music-error-in-elementaryos
 ---
 
 网易云音乐的客户端在跨平台上领先国内其他音乐服务提供商，所以我一直都是在频繁使用网易云，也不知不觉网易云用户等级来到了最高等级。但是在Linux上使用网易云，我一直都是有一个心结。当使用网易云音乐v1.1.0版本在Arch或者Ubuntu运行时，必须使用 `sudo` 来启动网易云音乐客户端，这个启动方式和我平时能不使用就不使用root权限的习惯不符。所以这个小问题一直困扰着我，直到最近无意在知乎上看到了 [@Fancy](https://www.zhihu.com/people/fancyz) 的[回答](https://www.zhihu.com/question/277330447/answer/478510195)，终于解决了我的心病。

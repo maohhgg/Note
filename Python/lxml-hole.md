@@ -5,7 +5,7 @@ tag:
   - python
   - lxml
   - XPath
-urlname: XPath-with-lxml
+urlname: xpath-with-lxml
 ---
 
 #### 根据 class 查找

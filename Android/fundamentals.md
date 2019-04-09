@@ -3,7 +3,7 @@ title: Android基础（Android笔记一）
 date: 2016/9/9
 tag:
   - Android
-urlname: Android-note-the-base
+urlname: android-note-the-base
 ---
 
 # Android笔记
